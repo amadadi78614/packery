@@ -47,3 +47,4 @@ On Vercel, add the same keys under Project → Settings → Environment Variable
 - Confirm practice registration details (e.g. SAICA / IRBA numbers) for the footer if the firm wants them displayed.
 
 All animations respect the visitor's "reduce motion" OS setting.
+"# packery" 
