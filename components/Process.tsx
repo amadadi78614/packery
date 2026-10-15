@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { process } from "@/lib/site";
+import { processSteps } from "@/lib/site";
 import { Reveal } from "./motion";
 
 export default function Process() {
@@ -21,17 +21,17 @@ export default function Process() {
         <div ref={ref} className="relative mt-16 grid gap-10 lg:grid-cols-4 lg:gap-6">
           {/* track */}
           <div className="absolute left-6 top-6 h-[calc(100%-3rem)] w-0.5 bg-slate-200 lg:left-6 lg:right-6 lg:top-6 lg:h-0.5 lg:w-auto" aria-hidden>
-            <motion.div style={{ scaleY: scale }} className="h-full w-full origin-top bg-gradient-to-b from-gold-500 to-gold-300 lg:hidden" />
-            <motion.div style={{ scaleX: scale }} className="hidden h-full w-full origin-left bg-gradient-to-r from-gold-500 to-gold-300 lg:block" />
+            <motion.div style={{ scaleY: scale }} className="h-full w-full origin-top bg-gradient-to-b from-accent-500 to-accent-300 lg:hidden" />
+            <motion.div style={{ scaleX: scale }} className="hidden h-full w-full origin-left bg-gradient-to-r from-accent-500 to-accent-300 lg:block" />
           </div>
-          {process.map((p, i) => (
+          {processSteps.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.12} className="relative pl-20 lg:pl-0">
               <div>
                 <motion.span
                   whileInView={{ scale: [0.6, 1.15, 1] }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 + i * 0.15, duration: 0.6 }}
-                  className="absolute left-0 top-0 grid h-12 w-12 place-items-center rounded-full bg-navy-900 font-display text-lg font-bold text-gold-400 ring-8 ring-slate-50 lg:relative"
+                  className="absolute left-0 top-0 grid h-12 w-12 place-items-center rounded-full bg-navy-900 font-display text-lg font-bold text-accent-400 ring-8 ring-slate-50 lg:relative"
                 >
                   {i + 1}
                 </motion.span>

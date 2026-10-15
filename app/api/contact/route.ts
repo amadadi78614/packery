@@ -47,7 +47,7 @@ export async function POST(req: Request) {
 
   if (RESEND_API_KEY && CONTACT_TO_EMAIL) {
     const row = (k: string, v: string) => `<tr><td style="padding:6px 12px;color:#64748b">${k}</td><td style="padding:6px 12px;font-weight:600">${esc(v || "—")}</td></tr>`;
-    const html = `<h2 style="font-family:sans-serif;color:#0A1A33">New quote request · ${reference}</h2>
+    const html = `<h2 style="font-family:sans-serif;color:#1F2340">New quote request · ${reference}</h2>
 <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">
 ${row("Services", d.services.join(", "))}${row("Client type", d.clientType)}${row("Turnover", d.turnover)}${row("Timeline", d.timeline)}
 ${row("Name", d.name)}${row("Business", d.company)}${row("Email", d.email)}${row("Phone", d.phone)}
@@ -68,7 +68,9 @@ ${row("Name", d.name)}${row("Business", d.company)}${row("Email", d.email)}${row
       return NextResponse.json({ error: "We couldn't send your request right now." }, { status: 502 });
     }
   } else {
-    console.info(`[quote] ${reference} received (email delivery not configured):`, d);
+    // Email not configured: avoid writing personal information to production logs (POPIA s19).
+    if (process.env.NODE_ENV === "production") console.warn(`[quote] ${reference} received but email delivery is NOT configured — set RESEND_API_KEY and CONTACT_TO_EMAIL.`);
+    else console.info(`[quote] ${reference} received (email delivery not configured):`, d);
   }
 
   return NextResponse.json({ ok: true, reference });

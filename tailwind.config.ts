@@ -5,8 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: { 950: "#060E1F", 900: "#0A1A33", 800: "#10264A", 700: "#183563", 600: "#22477F" },
-        gold: { 300: "#E6CF9A", 400: "#D7B672", 500: "#C29A4E", 600: "#A27F3C" },
+        navy: { 950: "#151829", 900: "#1F2340", 800: "#2B304F", 700: "#3A4068", 600: "#4E5584" },
+        accent: { 300: "#BFE0F7", 400: "#8CC6EE", 500: "#5AA9E0", 600: "#2F86C2" },
+        ez: { emerald: "#16542A", deep: "#0C3519", gold: "#C9A44C", light: "#E9D9A6" },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

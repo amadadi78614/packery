@@ -4,7 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { services } from "@/lib/site";
-import { Reveal, requestQuote } from "./motion";
+import Link from "next/link";
+import { Reveal } from "./motion";
+import { quoteHref } from "@/lib/site";
+import { serviceDetails } from "@/lib/serviceDetails";
 
 export default function Services() {
   const [active, setActive] = useState(0);
@@ -22,7 +25,7 @@ export default function Services() {
       <div className="grid-lines absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent)]" aria-hidden />
       <div className="container-site relative">
         <Reveal className="max-w-2xl">
-          <span className="eyebrow text-gold-400">Our services</span>
+          <span className="eyebrow text-accent-400">Our services</span>
           <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
             Everything your finances need. <span className="text-slate-400">Under one roof.</span>
           </h2>
@@ -44,9 +47,9 @@ export default function Services() {
                   className={`relative flex min-w-[15rem] shrink-0 items-center gap-4 rounded-2xl p-5 text-left transition-colors lg:min-w-0 ${on ? "text-navy-950" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"}`}
                 >
                   {on && (
-                    <motion.span layoutId="svc-pill" className="absolute inset-0 rounded-2xl bg-gold-500" transition={{ type: "spring", stiffness: 380, damping: 32 }} />
+                    <motion.span layoutId="svc-pill" className="absolute inset-0 rounded-2xl bg-accent-500" transition={{ type: "spring", stiffness: 380, damping: 32 }} />
                   )}
-                  <span className={`relative grid h-11 w-11 shrink-0 place-items-center rounded-xl ${on ? "bg-navy-950 text-gold-400" : "bg-white/10 text-gold-400"}`}>
+                  <span className={`relative grid h-11 w-11 shrink-0 place-items-center rounded-xl ${on ? "bg-navy-950 text-accent-400" : "bg-white/10 text-accent-400"}`}>
                     <XI className="h-5 w-5" aria-hidden />
                   </span>
                   <span className="relative">
@@ -72,15 +75,15 @@ export default function Services() {
               >
                 <div className="flex items-start justify-between gap-6">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">0{active + 1} / 0{services.length}</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">0{active + 1} / 0{services.length}</p>
                     <h3 className="mt-3 font-display text-3xl font-bold sm:text-4xl">{s.title}</h3>
-                    <p className="mt-2 font-display text-lg text-gold-300">{s.tagline}</p>
+                    <p className="mt-2 font-display text-lg text-accent-300">{s.tagline}</p>
                   </div>
                   <motion.span
                     initial={{ rotate: -30, scale: 0.6, opacity: 0 }}
                     animate={{ rotate: 0, scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 14, delay: 0.1 }}
-                    className="hidden h-20 w-20 shrink-0 place-items-center rounded-3xl bg-gold-500/15 text-gold-400 sm:grid"
+                    className="hidden h-20 w-20 shrink-0 place-items-center rounded-3xl bg-accent-500/15 text-accent-400 sm:grid"
                   >
                     <Icon className="h-10 w-10" aria-hidden />
                   </motion.span>
@@ -95,15 +98,20 @@ export default function Services() {
                       transition={{ delay: 0.15 + i * 0.07 }}
                       className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm"
                     >
-                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold-500 text-navy-950"><Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /></span>
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent-500 text-navy-950"><Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /></span>
                       {p}
                     </motion.li>
                   ))}
                 </ul>
-                <button type="button" onClick={() => requestQuote(s.id)} className="btn-gold group mt-10">
-                  Get a quote for {s.short.toLowerCase()}
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-                </button>
+                <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                  <Link href={quoteHref(s.id)} className="btn-accent group">
+                    Get a quote for {s.short.toLowerCase()}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+                  </Link>
+                  <Link href={`/services/${serviceDetails[s.id].slug}`} className="btn-ghost-light">
+                    Learn more about {s.short.toLowerCase()}
+                  </Link>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>

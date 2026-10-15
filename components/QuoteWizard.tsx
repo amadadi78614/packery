@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Loader2, AlertCircle, Clock, ShieldCheck, Sparkles } from "lucide-react";
-import { services, clientTypes, turnoverBands, timelines, site } from "@/lib/site";
-import { QUOTE_EVENT, Reveal } from "./motion";
+import { services, clientTypes, turnoverBands, timelines, site, waLink, waMessages } from "@/lib/site";
+import Link from "next/link";
+import { Reveal } from "./motion";
+import { WhatsAppIcon } from "./icons/Brand";
 
 type Form = {
   services: string[]; clientType: string; turnover: string; timeline: string;
@@ -35,17 +37,10 @@ export default function QuoteWizard() {
   const [ref, setRef] = useState("");
   const [serverMsg, setServerMsg] = useState("");
 
+  // Preselect a service from /quote?service=<id>
   useEffect(() => {
-    const on = (e: Event) => {
-      const id = (e as CustomEvent<string>).detail;
-      if (!services.some((s) => s.id === id)) return;
-      setF((v) => (v.services.includes(id) ? v : { ...v, services: [...v.services, id] }));
-      setStatus("idle");
-      setDir(-1);
-      setStep(0);
-    };
-    window.addEventListener(QUOTE_EVENT, on);
-    return () => window.removeEventListener(QUOTE_EVENT, on);
+    const id = new URLSearchParams(window.location.search).get("service");
+    if (id && services.some((s) => s.id === id)) setF((v) => ({ ...v, services: [id] }));
   }, []);
 
   const set = <K extends keyof Form>(k: K, v: Form[K]) => {
@@ -96,34 +91,51 @@ export default function QuoteWizard() {
   }
 
   const reset = () => { setF(initial); setStep(0); setStatus("idle"); };
+
+  const waSummary = (reference?: string) => {
+    const titles = f.services.map((id) => services.find((s) => s.id === id)?.title).filter(Boolean).join(", ");
+    return [
+      `Good day S Packery Inc, I'd like a quote${reference ? ` (Ref ${reference})` : ""}.`,
+      titles && `Services: ${titles}`,
+      f.clientType && `I am: ${f.clientType}`,
+      f.turnover && `Turnover: ${f.turnover}`,
+      f.timeline && `Timeline: ${f.timeline}`,
+      f.name && `Name: ${f.name}${f.company ? ` (${f.company})` : ""}`,
+      f.message && `Notes: ${f.message}`,
+    ].filter(Boolean).join("\n");
+  };
   const errMsg = (k: string) => (err[k] ? <p className="mt-2 text-xs font-medium text-red-600" role="alert">{err[k]}</p> : null);
   const label = "mb-1.5 block text-sm font-semibold text-navy-900";
 
   return (
-    <section id="quote" className="relative overflow-hidden py-24 sm:py-32">
-      <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-gold-300/20 blur-3xl" aria-hidden />
+    <section id="quote" className="relative overflow-hidden py-16 sm:py-24">
+      <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-accent-300/20 blur-3xl" aria-hidden />
       <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-navy-600/10 blur-3xl" aria-hidden />
       <div className="container-site relative grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
-          <span className="eyebrow">Get a quote</span>
-          <h2 className="h-section mt-4 text-4xl sm:text-5xl">Your tailored quote, in three quick steps.</h2>
+          <span className="eyebrow">How it works</span>
+          <h2 className="h-section mt-4 text-4xl sm:text-5xl">Quick, free and confidential.</h2>
           <p className="mt-5 text-lg leading-relaxed text-slate-600">
-            Tell us what you need and we&apos;ll come back with a clear, fixed-scope proposal. No obligation, no jargon.
+            Choose your services, tell us a little about yourself, and we&apos;ll reply within one business day — by email, phone or WhatsApp, whichever suits you.
           </p>
           <ul className="mt-10 space-y-5">
             {[
               { icon: Clock, t: "Takes under 60 seconds", d: "Three short steps — that's it." },
               { icon: Sparkles, t: "Scoped to your business", d: "Fees based on what you actually need." },
-              { icon: ShieldCheck, t: "Confidential", d: "Your details are handled in line with POPIA." },
+              { icon: ShieldCheck, t: "Confidential", d: "Your details are handled in line with POPIA — see our Privacy Notice." },
             ].map(({ icon: I, t, d }) => (
               <li key={t} className="flex gap-4">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gold-500/15 text-gold-600"><I className="h-5 w-5" aria-hidden /></span>
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-500/15 text-accent-600"><I className="h-5 w-5" aria-hidden /></span>
                 <span><span className="block font-semibold text-navy-900">{t}</span><span className="text-sm text-slate-600">{d}</span></span>
               </li>
             ))}
           </ul>
           <p className="mt-10 text-sm text-slate-500">
-            Prefer to talk? Call <a href={site.phoneHref} className="font-semibold text-navy-900 underline decoration-gold-500 underline-offset-4">{site.phoneDisplay}</a>
+            Prefer to talk? Call <a href={site.phoneHref} className="font-semibold text-navy-900 underline decoration-accent-500 underline-offset-4">{site.phoneDisplay}</a>
+            {" "}or{" "}
+            <a href={waLink(waMessages.firm)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-[#128C7E] underline decoration-[#25D366] underline-offset-4">
+              <WhatsAppIcon className="h-4 w-4" /> WhatsApp us
+            </a>
           </p>
         </Reveal>
 
@@ -142,14 +154,19 @@ export default function QuoteWizard() {
                     initial={{ scale: 0, rotate: -90 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", stiffness: 220, damping: 14 }}
-                    className="grid h-24 w-24 place-items-center rounded-full bg-gold-500 text-navy-950 shadow-[0_0_60px_rgba(194,154,78,0.5)]"
+                    className="grid h-24 w-24 place-items-center rounded-full bg-accent-500 text-navy-950 shadow-[0_0_60px_rgba(90,169,224,0.5)]"
                   >
                     <CheckCircle2 className="h-12 w-12" />
                   </motion.div>
                   <h3 className="mt-8 font-display text-3xl font-bold text-navy-900">Quote request received.</h3>
                   {ref && <p className="mt-3 rounded-full bg-slate-100 px-4 py-1.5 font-mono text-sm text-navy-900">Ref: {ref}</p>}
                   <p className="mt-4 max-w-sm text-slate-600">Thank you, {f.name.split(" ")[0]}. We&apos;ll be in touch within one business day with your tailored proposal.</p>
-                  <button type="button" onClick={reset} className="btn-navy mt-8">Start a new request</button>
+                  <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                    <a href={waLink(waSummary(ref))} target="_blank" rel="noopener noreferrer" className="btn bg-[#25D366] text-white hover:bg-[#1ebe5b]">
+                      <WhatsAppIcon className="h-5 w-5" /> Also send on WhatsApp
+                    </a>
+                    <button type="button" onClick={reset} className="btn-navy">Start a new request</button>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.form key="form" onSubmit={submit} noValidate className="p-6 sm:p-10">
@@ -157,13 +174,13 @@ export default function QuoteWizard() {
                   <div className="flex items-center gap-3">
                     {steps.map((s, i) => (
                       <div key={s} className="flex flex-1 items-center gap-3">
-                        <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-bold transition-colors ${i < step ? "bg-gold-500 text-navy-950" : i === step ? "bg-navy-900 text-white" : "bg-slate-100 text-slate-400"}`}>
+                        <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-bold transition-colors ${i < step ? "bg-accent-500 text-navy-950" : i === step ? "bg-navy-900 text-white" : "bg-slate-100 text-slate-400"}`}>
                           {i < step ? <Check className="h-4 w-4" strokeWidth={3} /> : i + 1}
                         </span>
                         <span className={`hidden text-sm font-medium sm:block ${i === step ? "text-navy-900" : "text-slate-400"}`}>{s}</span>
                         {i < steps.length - 1 && (
                           <span className="relative h-0.5 flex-1 overflow-hidden rounded bg-slate-100">
-                            <motion.span className="absolute inset-0 origin-left bg-gold-500" animate={{ scaleX: i < step ? 1 : 0 }} transition={{ duration: 0.5 }} />
+                            <motion.span className="absolute inset-0 origin-left bg-accent-500" animate={{ scaleX: i < step ? 1 : 0 }} transition={{ duration: 0.5 }} />
                           </span>
                         )}
                       </div>
@@ -195,9 +212,9 @@ export default function QuoteWizard() {
                                     onClick={() => toggle(s.id)}
                                     aria-pressed={on}
                                     whileTap={{ scale: 0.97 }}
-                                    className={`relative flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors ${on ? "border-gold-500 bg-gold-500/10" : "border-slate-200 hover:border-slate-300"}`}
+                                    className={`relative flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors ${on ? "border-accent-500 bg-accent-500/10" : "border-slate-200 hover:border-slate-300"}`}
                                   >
-                                    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl transition-colors ${on ? "bg-gold-500 text-navy-950" : "bg-slate-100 text-navy-900"}`}><I className="h-5 w-5" aria-hidden /></span>
+                                    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl transition-colors ${on ? "bg-accent-500 text-navy-950" : "bg-slate-100 text-navy-900"}`}><I className="h-5 w-5" aria-hidden /></span>
                                     <span className="font-semibold text-navy-900">{s.title}</span>
                                     <AnimatePresence>
                                       {on && (
@@ -288,12 +305,29 @@ export default function QuoteWizard() {
                     {step > 0 ? (
                       <button type="button" onClick={back} className="btn px-4 text-slate-600 hover:text-navy-900"><ArrowLeft className="h-4 w-4" /> Back</button>
                     ) : <span className="text-xs text-slate-400">Step 1 of 3</span>}
-                    <button type="submit" disabled={status === "sending"} className="btn-gold group px-7 disabled:opacity-70">
-                      {status === "sending" ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</> :
-                        step < 2 ? <>Continue <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></> :
-                        <>Get my quote <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></>}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {step === 2 && (
+                        <a
+                          href={waLink(waSummary())}
+                          target="_blank" rel="noopener noreferrer"
+                          aria-label="Send quote request on WhatsApp"
+                          title="Send on WhatsApp instead"
+                          className="btn bg-[#25D366] px-4 text-white hover:bg-[#1ebe5b]"
+                        >
+                          <WhatsAppIcon className="h-5 w-5" /><span className="hidden sm:inline">WhatsApp</span>
+                        </a>
+                      )}
+                      <button type="submit" disabled={status === "sending"} className="btn-accent group px-7 disabled:opacity-70">
+                        {status === "sending" ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</> :
+                          step < 2 ? <>Continue <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></> :
+                          <>Get my quote <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></>}
+                      </button>
+                    </div>
                   </div>
+                  <p className="mt-4 text-center text-xs text-slate-500" id="privacy-note-quote">
+                    We use your details only to respond to your request. See our{" "}
+                    <Link href="/privacy" className="font-semibold text-navy-900 underline underline-offset-2">Privacy Notice</Link>.
+                  </p>
                 </motion.form>
               )}
             </AnimatePresence>

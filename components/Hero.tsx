@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ArrowRight, Phone, ShieldCheck, TrendingUp, FileCheck2 } from "lucide-react";
-import { site, yearsInPractice } from "@/lib/site";
-import { CountUp, requestQuote } from "./motion";
+import Image from "next/image";
+import { site, yearsInPractice, allServices } from "@/lib/site";
+import Link from "next/link";
+import { CountUp } from "./motion";
 
-const words = ["Accounting", "Tax Planning", "Auditing", "SARS Compliance", "Business Growth"];
+const words = ["Auditing", "Taxation", "Forensic Audits", "SARS Facilitation", "BEE Accreditation", "Business Advisory"];
 
 function WordCycle() {
   const [i, setI] = useState(0);
@@ -15,7 +17,7 @@ function WordCycle() {
     return () => clearInterval(t);
   }, []);
   return (
-    <span className="relative inline-grid h-[1.3em] overflow-hidden align-bottom">
+    <span className="relative inline-grid h-[1.625em] overflow-hidden align-top leading-[1.625]">
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
           key={words[i]}
@@ -23,7 +25,7 @@ function WordCycle() {
           animate={{ y: "0%", opacity: 1 }}
           exit={{ y: "-110%", opacity: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="whitespace-nowrap font-semibold text-gold-300"
+          className="whitespace-nowrap font-semibold text-accent-300"
         >
           {words[i]}
         </motion.span>
@@ -35,24 +37,30 @@ function WordCycle() {
 function Badge() {
   const reduce = useReducedMotion();
   return (
-    <div className="relative h-28 w-28 sm:h-32 sm:w-32">
+    <div className="relative h-32 w-32 shrink-0 sm:h-36 sm:w-36">
+      {/* rotating orbit ring */}
       <motion.svg
         viewBox="0 0 200 200"
-        className="absolute inset-0 h-full w-full"
+        className="absolute -inset-3 h-[calc(100%+1.5rem)] w-[calc(100%+1.5rem)]"
         animate={reduce ? undefined : { rotate: 360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
         aria-hidden
       >
-        <defs>
-          <path id="ring" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
-        </defs>
-        <text fill="#D7B672" fontSize="12.5" fontWeight="600">
-          <textPath href="#ring" textLength="486" lengthAdjust="spacing">CHARTERED ACCOUNTANTS • REGISTERED AUDITORS • EST 2013 •</textPath>
-        </text>
+        <circle cx="100" cy="100" r="96" fill="none" stroke="rgba(140,198,238,0.45)" strokeWidth="1" strokeDasharray="2 7" />
+        <circle cx="100" cy="4" r="3.5" fill="#8CC6EE" />
       </motion.svg>
-      <div className="absolute inset-[22%] grid place-items-center rounded-full border border-gold-500/60 bg-navy-900 shadow-[0_0_40px_rgba(194,154,78,0.35)]">
-        <span className="font-display text-xl font-bold text-white sm:text-2xl">S<span className="text-gold-400">|</span>P</span>
-      </div>
+      <motion.div
+        className="absolute inset-0 rounded-full bg-accent-500/20 blur-2xl"
+        animate={reduce ? undefined : { opacity: [0.35, 0.8, 0.35], scale: [0.9, 1.05, 0.9] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        aria-hidden
+      />
+      <Image
+        src="/brand/spackery-logo-white.png"
+        alt="S Packery Inc. seal — Chartered Accountants, Registered Auditors, Est 2013"
+        width={681} height={671} priority
+        className="relative h-full w-full object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
+      />
     </div>
   );
 }
@@ -88,7 +96,7 @@ function DashboardCard() {
             {bars.map((h, i) => (
               <motion.div
                 key={i}
-                className="flex-1 rounded-t-md bg-gradient-to-t from-navy-600 to-gold-400/90"
+                className="flex-1 rounded-t-md bg-gradient-to-t from-navy-600 to-accent-400/90"
                 initial={{ height: reduce ? `${h}%` : 0 }}
                 animate={{ height: `${h}%` }}
                 transition={{ duration: 0.9, delay: 0.9 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
@@ -98,7 +106,7 @@ function DashboardCard() {
           <svg viewBox="0 0 300 140" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden>
             <motion.path
               d="M0,110 C40,100 60,80 90,84 S150,60 180,52 S240,30 300,12"
-              fill="none" stroke="#E6CF9A" strokeWidth="3" strokeLinecap="round"
+              fill="none" stroke="#BFE0F7" strokeWidth="3" strokeLinecap="round"
               initial={{ pathLength: reduce ? 1 : 0 }}
               animate={{ pathLength: 1 }}
               transition={{ duration: 1.8, delay: 1.3, ease: "easeInOut" }}
@@ -130,7 +138,7 @@ function DashboardCard() {
         animate={reduce ? { opacity: 1, x: 0 } : { opacity: 1, x: 0, y: [0, -10, 0] }}
         transition={{ opacity: { delay: 1.6 }, x: { delay: 1.6 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
       >
-        <ShieldCheck className="h-5 w-5 text-gold-400" />
+        <ShieldCheck className="h-5 w-5 text-accent-400" />
         <span className="text-xs font-semibold text-white">SARS return filed</span>
       </motion.div>
       <motion.div
@@ -143,7 +151,7 @@ function DashboardCard() {
         <span className="text-xs font-semibold text-white">Audit opinion issued</span>
       </motion.div>
       <motion.div
-        className="absolute -bottom-5 left-8 flex items-center gap-2 rounded-2xl bg-gold-500 px-3.5 py-2.5 text-navy-950 shadow-xl"
+        className="absolute -bottom-5 left-8 flex items-center gap-2 rounded-2xl bg-accent-500 px-3.5 py-2.5 text-navy-950 shadow-xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2.2 }}
@@ -182,27 +190,27 @@ export default function Hero() {
           <motion.div initial="hidden" animate="show" custom={0} variants={line} className="flex items-center gap-5">
             <Badge />
             <div className="text-sm leading-snug text-slate-300">
-              <p className="font-semibold text-white">Partner-led practice</p>
-              <p>Mbombela, Mpumalanga · since {site.established}</p>
+              <p className="font-display text-lg font-semibold italic text-white sm:text-xl">&ldquo;{site.slogan}&rdquo;</p>
+              <p className="mt-1">IRBA-registered · SAICA members · Mbombela since {site.established}</p>
             </div>
           </motion.div>
 
           <h1 className="mt-8 font-display text-[2.6rem] font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
             <motion.span className="block" initial="hidden" animate="show" custom={1} variants={line}>Numbers that</motion.span>
             <motion.span className="block" initial="hidden" animate="show" custom={2} variants={line}>
-              <span className="shimmer-gold">change your world.</span>
+              <span className="shimmer-accent">change your world.</span>
             </motion.span>
           </h1>
 
           <motion.p initial="hidden" animate="show" custom={3} variants={line} className="mt-7 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
-            Expert <WordCycle /> <br className="sm:hidden" />for businesses and individuals across Mpumalanga.
+            Expert <WordCycle /><br className="sm:hidden" /> for corporates, government, small businesses and individuals.
           </motion.p>
 
           <motion.div initial="hidden" animate="show" custom={4} variants={line} className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <button type="button" onClick={() => requestQuote()} className="btn-gold group px-8 py-4 text-base">
+            <Link href="/quote" className="btn-accent group px-8 py-4 text-base">
               Get a Free Quote
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden />
-            </button>
+            </Link>
             <a href={site.phoneHref} className="btn-ghost-light px-8 py-4 text-base">
               <Phone className="h-4 w-4" aria-hidden /> {site.phoneDisplay}
             </a>
@@ -214,17 +222,17 @@ export default function Hero() {
               <dt className="mt-1 text-xs text-slate-400">Years serving Mpumalanga</dt>
             </div>
             <div className="px-4">
-              <dd className="font-display text-3xl font-bold text-white sm:text-4xl"><CountUp to={4} /></dd>
-              <dt className="mt-1 text-xs text-slate-400">Core disciplines</dt>
+              <dd className="font-display text-3xl font-bold text-white sm:text-4xl"><CountUp to={allServices.length} suffix="+" /></dd>
+              <dt className="mt-1 text-xs text-slate-400">Specialist services</dt>
             </div>
             <div className="pl-4">
-              <dd className="font-display text-3xl font-bold text-white sm:text-4xl"><CountUp to={1} suffix=":1" /></dd>
-              <dt className="mt-1 text-xs text-slate-400">Direct partner access</dt>
+              <dd className="font-display text-3xl font-bold text-white sm:text-4xl">CA<span className="text-accent-400">(SA)</span></dd>
+              <dt className="mt-1 text-xs text-slate-400">Led by a Chartered Accountant</dt>
             </div>
           </motion.dl>
         </div>
 
-        <DashboardCard />
+        <div className="hidden md:block"><DashboardCard /></div>
       </motion.div>
 
       <motion.a
@@ -235,7 +243,7 @@ export default function Hero() {
         transition={{ duration: 2, repeat: Infinity }}
       >
         Scroll
-        <span className="h-10 w-px bg-gradient-to-b from-gold-400 to-transparent" />
+        <span className="h-10 w-px bg-gradient-to-b from-accent-400 to-transparent" />
       </motion.a>
     </section>
   );
