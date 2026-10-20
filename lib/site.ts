@@ -242,6 +242,7 @@ export const testimonials: Testimonial[] = [
     quote: "An absolute 10/10 experience! We've trusted this firm with our financials for more than a decade. They are highly knowledgeable, quick to respond, and incredibly friendly. Best of all, they keep our compliance completely up to date without us ever having to worry.",
     name: "Director",
     role: "Maraks Consulting and Project Management",
+    logo: "/testimonials/maraks-consulting.png",
     rating: 5,
   },
 ];

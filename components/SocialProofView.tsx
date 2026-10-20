@@ -88,7 +88,7 @@ export default function SocialProofView({ google, testimonials }: { google: Goog
                   <div className="mt-6 flex items-center gap-3 border-t border-slate-200 pt-4">
                     {t.logo
                       // eslint-disable-next-line @next/next/no-img-element
-                      ? <img src={t.logo} alt={`${t.role ?? t.name} logo`} className="h-12 w-12 shrink-0 rounded-xl object-cover" loading="lazy" />
+                      ? <img src={t.logo} alt={`${t.role ?? t.name} logo`} className="h-10 w-auto max-w-[6.5rem] shrink-0 sm:h-12 sm:max-w-[9rem] rounded-xl object-contain" loading="lazy" />
                       : <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-navy-900 font-display text-sm font-bold text-accent-300" aria-hidden>
                           {(t.role ?? t.name).split(/\s+/).filter((w) => /^[A-Z]/.test(w)).slice(0, 2).map((w) => w[0]).join("")}
                         </span>}
