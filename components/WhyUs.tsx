@@ -10,9 +10,9 @@ export default function WhyUs() {
       <div className="container-site">
         <div className="grid items-end gap-8 lg:grid-cols-2">
           <Reveal>
-            <span className="eyebrow">Why visit us</span>
+            <span className="eyebrow">Why S Packery</span>
             <h2 className="h-section mt-4 text-4xl sm:text-5xl">
-              What changes when <span className="text-accent-600">S Packery</span> is on your side.
+              What changes when <span className="whitespace-nowrap text-accent-600">S&nbsp;Packery</span> is on your side.
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
