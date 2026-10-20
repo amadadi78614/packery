@@ -19,6 +19,7 @@ npm run build && npm start
 | `/college` | EZ Accounting College (emerald and gold brand): programme, how to apply, application form with CV upload |
 | `/quote` | 3-step quote wizard (`/quote?service=auditing` preselects a service) |
 | `/contact` | Contact cards and map |
+| `/review` | Client feedback: Google review button + testimonial form (emailed to the firm with consent record) |
 
 Each page has its own title and description for Google. `sitemap.xml` and `robots.txt` are generated automatically.
 Set `NEXT_PUBLIC_SITE_URL` (default `https://www.packery.co.za`) for correct sitemap URLs.
@@ -46,7 +47,9 @@ copy `.env.example` to `.env.local` and set:
 - `CONTACT_FROM_EMAIL` — a sender on a domain verified in Resend
 
 EZ College applications (`/api/college-apply`) use the same keys; set `COLLEGE_TO_EMAIL` to send them to a different inbox.
-The CV (PDF/Word, max 4 MB) arrives as an email attachment. Each application gets a reference like EZ-A190HY.
+Applicants upload a certified ID and certified qualification (required), plus proof of SETA funding and CV (optional) — PDF/Word/JPG/PNG,
+4 MB combined. They arrive as email attachments. Each application gets a reference like EZ-A190HY.
+Testimonials (`/api/testimonial`) go to `CONTACT_TO_EMAIL` with reference TS-XXXXXX.
 
 On Vercel, add the same keys under Project → Settings → Environment Variables.
 
@@ -57,7 +60,7 @@ Unmatched questions are handed to WhatsApp with the visitor's question pre-fille
 
 ## Reviews & testimonials
 - Google reviews: set `GOOGLE_PLACES_API_KEY` + `GOOGLE_PLACE_ID`. The section stays hidden until the listing has 5+ reviews averaging 4.5+ (cached 24h).
-- "Review us on Google" button: set `NEXT_PUBLIC_GOOGLE_REVIEW_URL` (footer + contact page).
+- "Review us on Google" button: defaults to the firm's link (https://g.page/r/CRX6GqczFZPrEAI/review); override with `NEXT_PUBLIC_GOOGLE_REVIEW_URL`.
 - Testimonials: add entries to `testimonials` in `lib/site.ts` (with client permission). Shown when Google reviews don't qualify yet.
 
 ## Legal & compliance
@@ -65,17 +68,16 @@ Unmatched questions are handed to WhatsApp with the visitor's question pre-fille
 - Google Map loads only after the visitor clicks "Show map" (no Google cookies before consent).
 - Forms link to the privacy notice; the college form has explicit POPIA consent.
 - Production logs never contain form data (only reference numbers) — configure email delivery before go-live.
-- Firm to confirm: S Packery Inc. registration number (`site.regNo` in `lib/site.ts`), Information Officer, retention periods.
-  The Information Officer must be registered with the Information Regulator (eServices portal).
+- Confirmed 20 Oct 2026: registration number 2015/055195/21; Information Officer Suhayl Packery, registered with the
+  Information Regulator (registration 2026-069736).
 
 ## Content sources
 Content comes from the firm's own material: Business Profile, Auditing brochures, Postcard 4, finals flyer,
-EZ Accounting College partnership proposal, and the "Website information" email (13 Oct 2026).
+EZ Accounting College partnership proposal, and the "Website information" emails (13 and 20 Oct 2026).
 
 ## Before go-live
+- Configure email delivery (Resend keys above) — quote, college and testimonial forms don't email until this is done.
 - Team photos: after the photoshoot, add headshots to `/public/team/` and swap the initials avatars in `components/About.tsx`.
-- Client testimonials: add once collected.
-- EZ Accounting College: confirm programme length (proposal says 18 months; meeting mentioned one year).
-- Confirm office hours (currently "Weekdays · closes 16:30").
+- More testimonials: add to `testimonials` in `lib/site.ts` (logo optional, in `/public/testimonials/`).
 
 All animations respect the visitor's "reduce motion" OS setting.

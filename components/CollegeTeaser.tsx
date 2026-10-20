@@ -19,7 +19,7 @@ export default function CollegeTeaser() {
               {college.name}: <span className="text-ez-gold">{college.motto}</span>
             </h2>
             <p className="mt-4 max-w-2xl text-emerald-50/80">
-              An {college.programme} that bridges the gap between academic qualification and meaningful employment.
+              A {college.programme} that bridges the gap between academic qualification and meaningful employment.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/college#apply" className="btn group bg-ez-gold text-ez-deep hover:bg-ez-light">

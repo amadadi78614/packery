@@ -91,13 +91,13 @@ export default function College() {
                 <div className="mt-8 grid grid-cols-2 gap-3 text-left">
                   <div className="rounded-2xl bg-emerald-50 p-4">
                     <p className="text-[11px] font-semibold uppercase tracking-wider text-ez-emerald/70">Programme</p>
-                    <p className="mt-1 font-display text-2xl font-bold text-ez-emerald">18 months</p>
-                    <p className="text-xs text-slate-500">Graduate internship</p>
+                    <p className="mt-1 font-display text-2xl font-bold text-ez-emerald">{college.programmeShort}</p>
+                    <p className="text-xs text-slate-500">AT(SA) · SAICA-accredited</p>
                   </div>
                   <div className="rounded-2xl bg-amber-50 p-4">
                     <p className="text-[11px] font-semibold uppercase tracking-wider text-amber-800/70">Funding</p>
                     <p className="mt-1 font-display text-2xl font-bold text-amber-800">SETA</p>
-                    <p className="text-xs text-slate-500">Funded programme</p>
+                    <p className="text-xs text-slate-500">All learners SETA-funded</p>
                   </div>
                 </div>
                 <p className="mt-6 text-sm leading-relaxed text-slate-600">{college.partnerPitch}</p>

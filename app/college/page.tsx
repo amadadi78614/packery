@@ -7,9 +7,9 @@ import { WhatsAppIcon } from "@/components/icons/Brand";
 import { college, waLink, waMessages } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "EZ Accounting College — Graduate Internship Programme",
+  title: "EZ Accounting College — SAICA-accredited AT(SA) Programme",
   description:
-    "Apply to EZ Accounting College, a division of S Packery Inc.: an 18-month, SETA-funded internship giving finance graduates workplace readiness, mentorship and pathways to professional accreditation.",
+    "Apply to EZ Accounting College, a division of S Packery Inc.: a SAICA-accredited AT(SA) programme of 12 to 18 months for SETA-funded learners with an NQF 5 accounting or related qualification.",
 };
 
 export default function CollegePage() {
@@ -19,7 +19,7 @@ export default function CollegePage() {
         variant="ez"
         eyebrow={college.tagline}
         title={college.name}
-        subtitle={`${college.motto} An ${college.programme} for finance graduates — mentored inside a working chartered accountancy and audit practice.`}
+        subtitle={`${college.motto} A ${college.programme} for SETA-funded learners, trained and mentored inside a working chartered accountancy and audit practice.`}
         crumbs={[{ label: "EZ Accounting College" }]}
       >
         <div className="flex flex-col gap-3 sm:flex-row">

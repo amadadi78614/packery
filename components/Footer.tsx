@@ -1,4 +1,4 @@
-import { Phone, MapPin, Mail } from "lucide-react";
+import { Phone, MapPin, Mail, Clock3 } from "lucide-react";
 import { InstagramIcon } from "./icons/Brand";
 import Logo from "./Logo";
 import Link from "next/link";
@@ -30,6 +30,7 @@ export default function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm">
             {nav.map((n) => <li key={n.href}><Link href={n.href} className="hover:text-accent-400">{n.label}</Link></li>)}
             <li><Link href="/quote" className="hover:text-accent-400">Get a Quote</Link></li>
+            <li><Link href="/review" className="hover:text-accent-400">Share your experience</Link></li>
           </ul>
         </div>
         <div>
@@ -45,6 +46,7 @@ export default function Footer() {
             <li><a href={site.phoneHref} className="flex items-center gap-2 hover:text-accent-400"><Phone className="h-4 w-4 text-accent-500" aria-hidden />{site.phoneDisplay}</a></li>
             <li><a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-accent-400"><Mail className="h-4 w-4 text-accent-500" aria-hidden />{site.email}</a></li>
             <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" aria-hidden />{fullAddress}</li>
+            <li className="flex items-start gap-2"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" aria-hidden /><span>{site.hoursLines.slice(0, 2).map((h) => <span key={h} className="block">{h}</span>)}</span></li>
           </ul>
           <Link href="/quote" className="btn-accent mt-6 py-2.5">Get a Free Quote</Link>
           <GoogleReviewButton variant="dark" className="mt-3" />

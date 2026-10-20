@@ -42,6 +42,12 @@ const jsonLd = {
   memberOf: site.affiliations.map((a) => ({ "@type": "Organization", name: a.name })),
   address: { "@type": "PostalAddress", streetAddress: "12 de Kock Street, Sonheuwel", addressLocality: "Nelspruit", postalCode: "1200", addressRegion: "Mpumalanga", addressCountry: "ZA" },
   slogan: site.slogan,
+  identifier: site.regNo,
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"], opens: "08:00", closes: "16:30" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "08:00", closes: "12:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "14:00", closes: "16:00" },
+  ],
   logo: "/brand/spackery-logo.png",
   founder: { "@type": "Person", name: site.partner.name, jobTitle: site.partner.title, hasCredential: "CA(SA)" },
 };

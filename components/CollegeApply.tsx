@@ -2,23 +2,24 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, FileEdit, SearchCheck, PhoneCall } from "lucide-react";
-import { college, waLink, waMessages } from "@/lib/site";
+import { Plus, FileEdit, SearchCheck, PhoneCall, CheckCircle2, FileCheck2 } from "lucide-react";
+import { college, collegeRequirements, waLink, waMessages } from "@/lib/site";
 import { WhatsAppIcon } from "./icons/Brand";
 import CollegeApplyForm from "./CollegeApplyForm";
 import { Reveal } from "./motion";
 
 const steps = [
-  { icon: FileEdit, title: "Apply online", body: "Complete the form with your details, qualification and motivation. Attaching your CV helps." },
+  { icon: FileEdit, title: "Apply online", body: "Complete the form and upload your certified ID and certified highest qualification. Add your CV and proof of SETA funding if you have them." },
   { icon: SearchCheck, title: "We review", body: "The college team reviews your application against the intake requirements." },
   { icon: PhoneCall, title: "We contact you", body: "Shortlisted applicants are contacted with the next steps and the documents needed." },
 ];
 
 const faqs = [
-  { q: "Who can apply?", a: "The programme is designed for finance and accounting graduates who need practical workplace experience to start their careers." },
-  { q: "What are the requirements?", a: "Requirements are confirmed for each intake. Submit an application or ask us on WhatsApp and the college will tell you exactly what's needed and which documents to bring." },
-  { q: "How long is the programme?", a: `It is an ${college.programme}, giving you hands-on exposure inside a working chartered accountancy and audit practice.` },
-  { q: "How is the programme funded?", a: "The programme is sustained through the SETA funding system. The college will confirm the details for your intake." },
+  { q: "What programme do you offer?", a: `${college.accreditation}. It runs for 12 to 18 months, with hands-on training inside a working chartered accountancy and audit practice.` },
+  { q: "What are the requirements?", a: `${collegeRequirements.minimum}. ${collegeRequirements.funding}.` },
+  { q: "Which documents must I upload?", a: "A certified copy of your highest qualification (certified within the last 3 months) and a certified copy of your ID. Upload proof of SETA funding if you have it, and your CV." },
+  { q: "How is the programme funded?", a: "All learners must be funded by a SETA. If you don't have funding confirmed yet, apply anyway and tell us on the form. The college will advise you on the next steps." },
+  { q: "Do you offer job shadowing?", a: "Yes. Students can job-shadow at S Packery Inc. to see the day-to-day work of a chartered accountancy and audit firm. WhatsApp us to arrange it." },
 ];
 
 export default function CollegeApply() {
@@ -38,6 +39,19 @@ export default function CollegeApply() {
             <p className="mt-5 text-lg leading-relaxed text-slate-600">
               Three simple steps from application to your first day of real-world experience.
             </p>
+          </Reveal>
+
+          <Reveal delay={0.05}>
+            <div className="mt-8 rounded-2xl border border-ez-gold/30 bg-white p-6 shadow-sm">
+              <h3 className="flex items-center gap-2 font-display text-lg font-bold text-ez-deep">
+                <FileCheck2 className="h-5 w-5 text-ez-gold" /> Entry requirements
+              </h3>
+              <ul className="mt-4 space-y-2.5 text-sm text-slate-700">
+                {[collegeRequirements.minimum, collegeRequirements.funding, ...collegeRequirements.documents].map((r) => (
+                  <li key={r} className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-ez-emerald" />{r}</li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
 
           <ol className="relative mt-10 space-y-6 border-l-2 border-ez-gold/40 pl-8">

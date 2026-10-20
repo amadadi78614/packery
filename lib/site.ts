@@ -6,12 +6,13 @@ import {
 /* ------------------------------------------------------------------ */
 /*  All firm content lives here. Sources: S Packery Inc Business       */
 /*  Profile, Auditing brochures, Postcard, finals flyer, and the       */
-/*  "Website information" email (13 Oct 2026).                          */
+/*  "Website information" emails (13 & 20 Oct 2026).                    */
 /* ------------------------------------------------------------------ */
 
 export const site = {
   name: "S Packery Inc.",
-  legalName: "S Packery Inc.",
+  /** Registered name as it appears on the Information Regulator certificate. */
+  legalName: "Packery and Co t/a S Packery Inc.",
   descriptor: "Chartered Accountants & Registered Auditors",
   slogan: "Where Integrity Balances Every Ledger",
   established: "June 2013",
@@ -21,7 +22,8 @@ export const site = {
   address: { street: "12 de Kock Street", suburb: "Sonheuwel", city: "Nelspruit", code: "1200" },
   phoneDisplay: "066 557 2559",
   phoneHref: "tel:+27665572559",
-  hours: "Weekdays · closes 16:30",
+  hours: "Mon–Thu 08:00–16:30 · Fri 08:00–12:00 & 14:00–16:00",
+  hoursLines: ["Monday – Thursday: 08:00 – 16:30", "Friday: 08:00 – 12:00 and 14:00 – 16:00", "Weekends & public holidays: closed"],
   email: "admin@packery.co.za",
   whatsapp: "27665572559",
   whatsappDisplay: "066 557 2559",
@@ -33,15 +35,18 @@ export const site = {
     { short: "SARS", name: "Registered Tax Practitioners" },
     { short: "DoE", name: "Approved auditors · Department of Education, Mpumalanga" },
     { short: "CIPC", name: "Accredited online agents" },
-    { short: "NAFCO", name: "Preferred partners" },
   ],
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=12+de+Kock+Street,+Sonheuwel,+Nelspruit,+1200",
   mapsEmbed: "https://www.google.com/maps?q=12+de+Kock+Street,+Sonheuwel,+Nelspruit,+1200&output=embed",
-  /** CIPC registration number of S Packery Inc. — TO CONFIRM with the firm (shown in legal notices once set). */
-  regNo: "",
+  /** CIPC registration number (confirmed by the firm, 20 Oct 2026). */
+  regNo: "2015/055195/21",
   legalStatus: "Personal liability company (Inc.) registered in South Africa",
   /** POPIA Information Officer (defaults to the head of the private body) — must be registered with the Information Regulator. */
-  informationOfficer: { name: "Suhayl Packery", role: "Managing Director", email: "admin@packery.co.za" },
+  informationOfficer: {
+    name: "Suhayl Packery", role: "Managing Director", email: "admin@packery.co.za",
+    /** Information Regulator registration (certificate issued 20 Oct 2026). */
+    registrationNo: "2026-069736", registeredOn: "20 October 2026",
+  },
   partner: {
     name: "Suhayl Packery",
     title: "Founder & Managing Director",
@@ -79,6 +84,7 @@ export const team: Leader[] = [
     subtitle: "Head of Assurance · Lead audit partner",
     qualifications: ["CA(SA) — qualified 2005", "Registered IRBA Auditor", "B Com Accounting (Cum Laude)", "Hons (Accounting)", "University of Johannesburg alumnus"],
     experience: [
+      { org: "S Packery Inc.", role: "Founder · Chartered Accountants and Registered Auditors", years: "Jul 2013 – present" },
       { org: "Nkomati Mine", role: "Manager, Financial Statements", years: "2011 – 2013" },
       { org: "Ramaphoka Attorneys", role: "Head of Accounting", years: "2010 – 2011" },
       { org: "BMW SA", role: "Manager, New Cars", years: "2006 – 2010" },
@@ -115,7 +121,7 @@ export const services: Service[] = [
     id: "accounting", title: "Accounting", short: "Accounting", icon: Calculator,
     tagline: "Books you can trust. Decisions you can make.",
     summary: "Reliable financial reporting for businesses of all sizes — from monthly management accounts to clear, compliant annual financial statements that reflect your business's true financial health.",
-    points: ["Monthly management accounts", "Compilation of Annual Financial Statements", "Personal & business accounting", "Business & annual operating plans", "Administrative costing", "Registered Pastel MBO advisors"],
+    points: ["Monthly management accounts", "Compilation of Annual Financial Statements", "Payroll services", "Personal & business accounting", "Business & annual operating plans", "Registered Pastel MBO advisors"],
   },
   {
     id: "taxation", title: "Taxation", short: "Tax", icon: Landmark,
@@ -127,7 +133,7 @@ export const services: Service[] = [
     id: "auditing", title: "Auditing", short: "Audit", icon: FileCheck2,
     tagline: "An opinion your stakeholders respect.",
     summary: "A specialised auditing firm registered with IRBA. Statutory and forensic audits delivered with technical mastery and unwavering ethics — trusted by business and government alike.",
-    points: ["Statutory audits & assurance", "Forensic investigations & auditing", "Approved auditors · Dept of Education, Mpumalanga", "Consulting auditor to government departments", "Tender submission assessment", "Accounting & auditing for all entity sizes"],
+    points: ["Statutory audits & assurance", "Attorney trust account audits", "School audits · approved by the Dept of Education, Mpumalanga", "Forensic investigations & auditing", "Consulting auditor to government departments", "Tender submission assessment"],
   },
   {
     id: "business", title: "Business Services & Solutions", short: "Business", icon: Briefcase,
@@ -142,7 +148,7 @@ export const allServices = [
   "Auditing", "Forensic Investigations", "Annual Financial Statements", "Taxation", "SARS Facilitation & Negotiations",
   "BEE Accreditation", "Company Registration", "CIPC Services", "Business Advisory", "Business Analysis",
   "Statutory Returns", "Business Valuations", "Tax Clearance Certificates", "Capital Gains Tax", "Legal Agreements",
-  "Personal Accounting", "Government Consulting",
+  "Personal Accounting", "Government Consulting", "Payroll", "Attorney Trust Account Audits", "School Audits", "Job Shadowing",
 ];
 
 /* ---------------------------- Why S Packery --------------------------- */
@@ -181,34 +187,63 @@ export const college = {
   regNo: "2013/202496/07",
   tagline: "A division of S Packery Inc.",
   motto: "Empower. Grow. Achieve.",
-  programme: "18-month graduate internship programme",
+  programme: "SAICA-accredited AT(SA) programme (12 to 18 months)",
+  programmeShort: "12–18 months",
+  accreditation: "Accredited by SAICA to offer the AT(SA) (Accounting Technician) programme",
   summary:
     "Many graduates struggle to move from study into the workplace because they lack practical experience. EZ Accounting College bridges that gap — giving finance graduates hands-on exposure to real-world work so they enter the industry skilled, confident and employable.",
   highlights: [
-    "Internship & workplace readiness",
-    "Student mentorship and coaching",
-    "Pathways to professional accreditation",
-    "SETA-funded programme",
+    "SAICA-accredited AT(SA) programme",
+    "Workplace training & mentorship",
+    "Job shadowing for students",
+    "SETA-funded learners",
   ],
   partnerPitch:
     "Organisations in the education and finance sectors can partner with us to build a stronger pipeline of qualified professionals.",
 };
 
+/** Entry requirements and documents, confirmed by the college (20 Oct 2026). */
+export const collegeRequirements = {
+  minimum: "An NQF 5 accounting qualification, or another related qualification",
+  funding: "All learners must be funded by a SETA",
+  documents: [
+    "Highest qualification — certified copy (certified within the last 3 months)",
+    "Certified copy of your ID",
+    "Proof of SETA funding, if available",
+    "CV (recommended)",
+  ],
+};
+
 export const qualifications = [
-  "BCom Accounting",
-  "BCom Honours / PGDA",
-  "National Diploma — Accounting / Financial Management",
-  "Other finance or accounting qualification",
-  "Currently studying (final year)",
+  "Higher Certificate in Accounting (NQF 5)",
+  "Diploma — Accounting / Financial Management (NQF 6)",
+  "BCom Accounting (NQF 7)",
+  "BCom Honours / PGDA (NQF 8)",
+  "Other related qualification (NQF 5 or higher)",
 ];
+export const fundingStatuses = ["SETA funding confirmed", "Applying for SETA funding", "Not sure yet"];
 export const applicantStatuses = ["Unemployed graduate", "Currently employed", "Final-year student"];
 
 /* ---------------------------- Testimonials --------------------------- */
 /** Client testimonials (option 3). Add entries ONLY with the client's written permission.
  *  The section appears automatically once at least one entry exists.
  *  Example: { quote: "…", name: "Thabo M.", role: "Director, XYZ Logistics", service: "Auditing" } */
-export type Testimonial = { quote: string; name: string; role?: string; service?: string };
-export const testimonials: Testimonial[] = [];
+export type Testimonial = { quote: string; name: string; role?: string; service?: string; logo?: string; rating?: number };
+export const testimonials: Testimonial[] = [
+  {
+    quote: "I cannot recommend S. Packery INC highly enough. They provide top tier accounting services with an incredible level of personal attention and care. The team is highly professional. On top of their exceptional service, their fees are reasonable and transparent. Finding someone you can trust implicitly is exceptional.",
+    name: "Director",
+    role: "Innovative Trade Solutions",
+    logo: "/testimonials/innovative-trade-solutions.jpg",
+    rating: 5,
+  },
+  {
+    quote: "An absolute 10/10 experience! We've trusted this firm with our financials for more than a decade. They are highly knowledgeable, quick to respond, and incredibly friendly. Best of all, they keep our compliance completely up to date without us ever having to worry.",
+    name: "Director",
+    role: "Maraks Consulting and Project Management",
+    rating: 5,
+  },
+];
 
 /* ------------------------------ Navigation --------------------------- */
 
@@ -228,7 +263,7 @@ export const clientTypes = ["Individual", "Sole proprietor", "Company (Pty) Ltd"
 export const turnoverBands = ["Under R1 million", "R1m – R5m", "R5m – R20m", "R20m – R50m", "Over R50m", "Not sure / N/A"];
 export const timelines = ["As soon as possible", "Within the month", "Planning ahead"];
 
-export const legalUpdated = "16 October 2026";
+export const legalUpdated = "20 October 2026";
 
 export const infoRegulator = {
   name: "Information Regulator (South Africa)",

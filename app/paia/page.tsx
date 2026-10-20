@@ -30,7 +30,7 @@ const records: [string, string][] = [
 
 const popia: [string, string, string][] = [
   ["Clients and prospective clients", "Names, contact details, ID/registration numbers, financial and tax information, correspondence", "Providing accounting, tax, audit and advisory services; compliance with law and professional standards"],
-  ["College applicants and learners", "Names, contact details, qualifications, CVs, programme records", "Assessing applications; running the internship programme; SETA reporting"],
+  ["College applicants and learners", "Names, contact details, ID copies, qualifications, CVs, SETA funding records, programme records", "Assessing applications; running the AT(SA) programme; SETA funding and reporting"],
   ["Employees and job applicants", "Personal and contact details, ID numbers, qualifications, banking and payroll information, tax numbers", "Employment, payroll, tax and labour-law compliance"],
   ["Suppliers and operators", "Contact details, company and banking information, contracts", "Procurement and contract management"],
   ["Website visitors", "Enquiry form details; technical server logs", "Responding to enquiries; website security"],
@@ -46,7 +46,7 @@ const sections: LegalSection[] = [
           regulation 4 of the POPIA Regulations. It explains how to request access to records held by:
         </p>
         <ul className={ul}>
-          <li><strong>{site.name}</strong> — {site.legalStatus}{site.regNo ? `, registration number ${site.regNo}` : ""}; {site.descriptor}; and</li>
+          <li><strong>{site.legalName}</strong> — {site.legalStatus}{site.regNo ? `, registration number ${site.regNo}` : ""}; {site.descriptor}; and</li>
           <li><strong>{college.legalName}</strong> — registration number {college.regNo}, a division of {site.name}.</li>
         </ul>
         <p>Both are private bodies as defined in PAIA.</p>
@@ -58,6 +58,7 @@ const sections: LegalSection[] = [
     body: (
       <ul className={ul}>
         <li><strong>Head of the private body / Information Officer:</strong> {io.name} ({io.role})</li>
+        <li><strong>Information Regulator registration number:</strong> {io.registrationNo} (registered {io.registeredOn})</li>
         <li><strong>Physical address:</strong> {fullAddress}</li>
         <li><strong>Telephone:</strong> {site.phoneDisplay}</li>
         <li><strong>Email:</strong> <a className={a} href={`mailto:${io.email}`}>{io.email}</a></li>

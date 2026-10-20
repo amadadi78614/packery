@@ -20,6 +20,7 @@ const sections: LegalSection[] = [
         <p>The following information is provided in terms of section 43 of the Electronic Communications and Transactions Act 25 of 2002:</p>
         <ul className={ul}>
           <li><strong>Full name:</strong> {site.name}</li>
+          <li><strong>Registered name:</strong> {site.legalName}</li>
           <li><strong>Legal status:</strong> {site.legalStatus}</li>
           {site.regNo && <li><strong>Registration number:</strong> {site.regNo}</li>}
           <li><strong>Director:</strong> {site.partner.name}, CA(SA)</li>

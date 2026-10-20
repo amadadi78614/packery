@@ -27,12 +27,15 @@ export default function ContactPage() {
         </Link>
       </PageHero>
       <Contact />
-      {googleReviewUrl && (
-        <div className="container-site -mt-12 pb-20 text-center">
-          <p className="mb-3 text-sm text-slate-500">Already a client? We&apos;d value your feedback.</p>
-          <GoogleReviewButton />
+      <div className="container-site -mt-12 flex flex-col items-center gap-3 pb-20 text-center">
+        <p className="text-sm text-slate-500">Already a client? We&apos;d value your feedback.</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          {googleReviewUrl && <GoogleReviewButton />}
+          <Link href="/review" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-navy-900 transition hover:border-accent-500">
+            Write a testimonial <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
-      )}
+      </div>
     </>
   );
 }

@@ -11,7 +11,7 @@ export default function Contact() {
     { icon: Mail, k: "Email requests", v: site.email, href: `mailto:${site.email}` },
     { icon: InstagramIcon, k: "Instagram", v: `@${site.instagram}`, href: site.instagramUrl },
     { icon: MapPin, k: "Visit us", v: fullAddress, href: site.mapsUrl },
-    { icon: Clock3, k: "Office hours", v: site.hours },
+    { icon: Clock3, k: "Office hours", v: site.hoursLines.slice(0, 2).join("\n") },
   ];
   return (
     <section id="contact" className="py-24 sm:py-32">
@@ -28,7 +28,7 @@ export default function Contact() {
                   <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-navy-900 text-accent-400 transition-transform group-hover:scale-110"><I className="h-6 w-6" aria-hidden /></span>
                   <span>
                     <span className="block text-xs font-semibold uppercase tracking-wider text-slate-500">{k}</span>
-                    <span className="mt-0.5 block break-all font-display text-lg font-semibold text-navy-900">{v}</span>
+                    <span className={`mt-0.5 block whitespace-pre-line font-display font-semibold text-navy-900 ${k === "Office hours" ? "text-base" : "break-all text-lg"}`}>{v}</span>
                   </span>
                 </>
               );

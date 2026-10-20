@@ -28,7 +28,7 @@ const sections: LegalSection[] = [
           <li><strong>Address:</strong> {fullAddress}</li>
           <li><strong>Phone / WhatsApp:</strong> {site.phoneDisplay}</li>
           <li><strong>Email:</strong> <a className={a} href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><strong>Information Officer:</strong> {io.name} ({io.role}) — <a className={a} href={`mailto:${io.email}`}>{io.email}</a></li>
+          <li><strong>Information Officer:</strong> {io.name} ({io.role}) — <a className={a} href={`mailto:${io.email}`}>{io.email}</a>; registered with the Information Regulator, registration number {io.registrationNo}</li>
         </ul>
       </>
     ),
@@ -55,8 +55,13 @@ const sections: LegalSection[] = [
         <p><strong>Quote requests:</strong> name, email address, phone number, business name (optional), the services you need, the type of client you are, approximate turnover band, timeline and any message you add.</p>
         <p>
           <strong>EZ Accounting College applications:</strong> name, email, phone, town, qualification, institution, year completed, current status,
-          motivation and, if you choose to upload it, your CV. Please don&apos;t include your ID number, health information or other special personal
-          information in your CV or motivation — we don&apos;t need it at application stage.
+          SETA funding status, motivation, and the documents you upload: a certified copy of your ID (which contains your ID number), a certified
+          copy of your highest qualification, and, if you choose to provide them, proof of SETA funding and your CV. Please don&apos;t include health
+          information or other special personal information in your CV or motivation — we don&apos;t need it.
+        </p>
+        <p>
+          <strong>Testimonials:</strong> if you submit a testimonial on our website, we collect your name, role, company, the service you used, your
+          rating and comments, and whether you agree to publication. We publish a testimonial only with your consent, in the form you agreed to.
         </p>
         <p>
           <strong>WhatsApp:</strong> WhatsApp buttons open WhatsApp (operated by Meta) with a pre-filled message. If you send it, we receive your
@@ -84,7 +89,9 @@ const sections: LegalSection[] = [
       <>
         <ul className={ul}>
           <li><strong>To respond to your enquiry and prepare a quote</strong> — taking steps at your request before a possible engagement (POPIA s11(1)(b)).</li>
-          <li><strong>To assess applications to EZ Accounting College</strong> and contact applicants about next steps — with your consent (s11(1)(a)), which you give on the application form.</li>
+          <li><strong>To assess applications to EZ Accounting College</strong>, verify identity and qualifications, and contact applicants about next steps — with your consent (s11(1)(a)), which you give on the application form.</li>
+          <li><strong>To apply for and administer SETA funding</strong> for accepted learners — with your consent (s11(1)(a)) and to meet SETA requirements (s11(1)(c)).</li>
+          <li><strong>To publish client testimonials</strong> — only with your consent (s11(1)(a)), which you can withdraw at any time.</li>
           <li><strong>To communicate with you</strong> by email, phone or WhatsApp about your enquiry or application — legitimate interest (s11(1)(f)).</li>
           <li><strong>To keep the website secure</strong> and prevent abuse (for example spam protection and rate limiting) — legitimate interest (s11(1)(f)).</li>
           <li><strong>To comply with legal and professional obligations</strong> — s11(1)(c).</li>
@@ -101,6 +108,7 @@ const sections: LegalSection[] = [
         <ul className={ul}>
           <li><strong>Our people:</strong> staff of {site.name} and {college.name} who need it to respond to you.</li>
           <li><strong>Operators (service providers) acting on our instructions:</strong> our website hosting provider and our email delivery provider, which deliver form submissions to our inbox.</li>
+          <li><strong>The relevant SETA</strong> — for accepted learners, to apply for and report on programme funding.</li>
           <li><strong>Google</strong> — only if you load the map, or to display public Google reviews.</li>
           <li><strong>WhatsApp (Meta)</strong> — when you choose to contact us on WhatsApp.</li>
           <li><strong>Authorities</strong> where the law requires it (for example SARS, regulators or a court order).</li>
@@ -124,7 +132,7 @@ const sections: LegalSection[] = [
     body: (
       <ul className={ul}>
         <li><strong>Quote enquiries</strong> that don&apos;t lead to an engagement: up to 12 months, then deleted.</li>
-        <li><strong>Unsuccessful college applications</strong> (including CVs): up to 12 months, then deleted — unless you ask us to keep you on file for future intakes.</li>
+        <li><strong>Unsuccessful college applications</strong> (including CVs and ID and qualification copies): up to 12 months, then deleted — unless you ask us to keep you on file for future intakes.</li>
         <li><strong>Clients and learners:</strong> for as long as the law and our professional obligations require.</li>
         <li><strong>Server logs:</strong> kept by our hosting provider for a limited period for security purposes.</li>
       </ul>

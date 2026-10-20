@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Star, Quote, ExternalLink } from "lucide-react";
 import type { GoogleReviews } from "@/lib/reviews";
@@ -56,7 +57,7 @@ export default function SocialProofView({ google, testimonials }: { google: Goog
 
         <motion.ul
           variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }}
-          className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+          className={`mt-12 grid gap-5 md:grid-cols-2 ${!google && testimonials.length < 3 ? "" : "lg:grid-cols-3"}`}
         >
           {google
             ? google.reviews.slice(0, 6).map((r) => (
@@ -79,15 +80,32 @@ export default function SocialProofView({ google, testimonials }: { google: Goog
               ))
             : testimonials.map((t) => (
                 <motion.li key={t.name + t.quote.slice(0, 12)} variants={rise} className="relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-7 transition hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-navy-900/5">
-                  <Quote className="h-8 w-8 text-accent-400" aria-hidden />
+                  <div className="flex items-center justify-between">
+                    <Quote className="h-8 w-8 text-accent-400" aria-hidden />
+                    {t.rating ? <Stars value={t.rating} /> : null}
+                  </div>
                   <p className="mt-4 flex-1 font-display text-base leading-relaxed text-navy-900">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="mt-6 border-t border-slate-200 pt-4">
-                    <p className="text-sm font-semibold text-navy-900">{t.name}</p>
-                    {(t.role || t.service) && <p className="text-xs text-slate-500">{[t.role, t.service].filter(Boolean).join(" · ")}</p>}
+                  <div className="mt-6 flex items-center gap-3 border-t border-slate-200 pt-4">
+                    {t.logo
+                      // eslint-disable-next-line @next/next/no-img-element
+                      ? <img src={t.logo} alt={`${t.role ?? t.name} logo`} className="h-12 w-12 shrink-0 rounded-xl object-cover" loading="lazy" />
+                      : <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-navy-900 font-display text-sm font-bold text-accent-300" aria-hidden>
+                          {(t.role ?? t.name).split(/\s+/).filter((w) => /^[A-Z]/.test(w)).slice(0, 2).map((w) => w[0]).join("")}
+                        </span>}
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-navy-900">{t.name}{t.role ? `, ${t.role}` : ""}</span>
+                      {t.service && <span className="block text-xs text-slate-500">{t.service}</span>}
+                    </span>
                   </div>
                 </motion.li>
               ))}
         </motion.ul>
+        <Reveal delay={0.1}>
+          <p className="mt-10 text-center text-sm text-slate-600">
+            A client of ours?{" "}
+            <Link href="/review" className="font-semibold text-accent-600 underline decoration-accent-300 underline-offset-4 hover:text-navy-900">Share your experience</Link>
+          </p>
+        </Reveal>
       </div>
     </section>
   );

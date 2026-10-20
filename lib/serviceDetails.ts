@@ -18,7 +18,7 @@ export const serviceDetails: Record<string, ServiceDetail> = {
     slug: "accounting",
     seoTitle: "Accounting Services in Nelspruit (Mbombela)",
     metaDescription:
-      "Monthly management accounts, annual financial statements, personal and business accounting from S Packery Inc., Chartered Accountants in Nelspruit.",
+      "Monthly management accounts, annual financial statements, payroll, personal and business accounting from S Packery Inc., Chartered Accountants in Nelspruit.",
     headline: "Clear, compliant numbers that tell you exactly where your business stands.",
     intro: [
       "Reliable financial reporting is the foundation of every good business decision. S Packery Inc. keeps your records accurate and up to date, and turns them into clear reports you can actually use.",
@@ -28,14 +28,15 @@ export const serviceDetails: Record<string, ServiceDetail> = {
       { title: "Monthly management accounts", body: "Timely monthly reporting so you can track performance, cash flow and costs as they happen — not a year later." },
       { title: "Annual Financial Statements", body: "Compilation of clear, compliant annual financial statements that satisfy SARS, CIPC, banks and stakeholders." },
       { title: "Personal & business accounting", body: "Accounting support for individuals, sole proprietors and companies of every size." },
-      { title: "Business & annual operating plans", body: "Structured business plans and annual operating plans that set targets and keep your strategy on track." },
-      { title: "Administrative costing", body: "Understand what your operations really cost so you can price correctly and protect your margins." },
+      { title: "Payroll services", body: "Accurate monthly payroll and payslips, with the related PAYE, UIF and SDL submissions handled for you." },
+      { title: "Business plans & costing", body: "Business and annual operating plans, plus administrative costing so you know what your operations really cost." },
       { title: "Pastel MBO advisors", body: "Registered Pastel MBO advisors — we help set up and get the most out of your accounting software." },
     ],
     forWho: ["Owner-managed businesses", "Growing SMEs needing monthly reporting", "Companies preparing for audit or finance", "Individuals with business or rental income"],
     faqs: [
       { q: "Can you take over my books from another accountant?", a: "Yes. We'll collect your existing records, review where things stand and set up a schedule going forward so nothing falls through the cracks." },
       { q: "Do I need monthly accounts or just annual statements?", a: "It depends on your size and goals. Monthly management accounts give you control during the year; at minimum every company needs annual financial statements. We'll recommend what fits." },
+      { q: "Do you offer payroll?", a: "Yes. We run payroll for businesses of all sizes, including payslips and the related monthly submissions." },
       { q: "Which accounting software do you work with?", a: "We are registered Pastel MBO advisors and can work with the system you already use." },
     ],
     related: ["taxation", "auditing"],
@@ -72,7 +73,7 @@ export const serviceDetails: Record<string, ServiceDetail> = {
     slug: "auditing",
     seoTitle: "Registered Auditors & Forensic Audits in Nelspruit",
     metaDescription:
-      "IRBA-registered auditing firm in Nelspruit. Statutory audits, forensic investigations and auditing, approved auditors for the Department of Education, Mpumalanga.",
+      "IRBA-registered auditing firm in Nelspruit. Statutory audits, attorney trust account audits, school audits and forensic investigations. Approved auditors for the Department of Education, Mpumalanga.",
     headline: "Independent audits and forensic investigations you — and your stakeholders — can rely on.",
     intro: [
       "S Packery Inc. is a specialised auditing firm registered with the Independent Regulatory Board for Auditors (IRBA). Our founder is the lead audit partner on assurance engagements.",
@@ -81,15 +82,17 @@ export const serviceDetails: Record<string, ServiceDetail> = {
     included: [
       { title: "Statutory audits", body: "Independent audits that give owners, lenders, regulators and boards confidence in your financial statements." },
       { title: "Forensic investigations & auditing", body: "Thorough, objective analysis to uncover financial irregularities, ensure accountability and support legal or regulatory action where needed." },
-      { title: "Government & public sector", body: "Approved auditors for the Department of Education, Mpumalanga, and consulting auditors to government departments." },
+      { title: "Attorney trust account audits", body: "Audits of attorneys' trust accounts, so legal practices can meet their annual Legal Practice Council reporting requirements." },
+      { title: "School audits", body: "Audits of schools' annual financial statements. We are on the Department of Education, Mpumalanga's list of approved auditors." },
+      { title: "Government & public sector", body: "Consulting auditors to government departments, with audit experience at government level since our PwC years." },
       { title: "Tender submission assessment", body: "Experience across automotive, mining, higher education and retail, applied to assessing and analysing tender submissions." },
-      { title: "Assurance engagements", body: "Assurance work led by a Chartered Accountant and registered IRBA auditor." },
-      { title: "Accounting & auditing", body: "Reliable financial reporting and audits under one roof, to keep your business compliant and informed." },
     ],
-    forWho: ["Companies requiring a statutory audit", "Schools and education bodies", "Government departments and public entities", "Boards and owners who suspect irregularities"],
+    forWho: ["Companies requiring a statutory audit", "Attorneys and legal practices", "Schools and education bodies", "Government departments and public entities", "Boards and owners who suspect irregularities"],
     faqs: [
       { q: "Does my company need an audit?", a: "It depends on factors such as your public interest score and your Memorandum of Incorporation. Some companies need an audit, others an independent review. We'll assess your position and advise." },
       { q: "Are you registered auditors?", a: "Yes. S Packery Inc. is registered with IRBA, and our lead audit partner is a Chartered Accountant (SA) and registered IRBA auditor." },
+      { q: "Do you audit attorneys' trust accounts?", a: "Yes. We audit attorneys' trust accounts so that legal practices can submit their annual audit reports to the Legal Practice Council." },
+      { q: "Do you audit schools?", a: "Yes. We are approved auditors for the Department of Education, Mpumalanga, and audit schools' annual financial statements." },
       { q: "When should I consider a forensic investigation?", a: "When you suspect fraud, theft, unexplained losses or financial irregularities. A forensic audit establishes the facts objectively and can support legal or regulatory action." },
     ],
     related: ["accounting", "business"],

@@ -64,4 +64,4 @@ export const reviewsQualify = (g: GoogleReviews | null): g is GoogleReviews =>
   !!g && g.count >= REVIEWS_MIN_COUNT && g.rating >= REVIEWS_MIN_RATING && g.reviews.length > 0;
 
 /** Public "leave a review" link (from Google Business Profile → Ask for reviews). */
-export const googleReviewUrl = process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "";
+export const googleReviewUrl = process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "https://g.page/r/CRX6GqczFZPrEAI/review";

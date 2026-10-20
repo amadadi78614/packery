@@ -4,40 +4,56 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, AlertCircle, Upload, FileText, X, Send, ShieldCheck } from "lucide-react";
-import { college, qualifications, applicantStatuses, waLink } from "@/lib/site";
+import { college, qualifications, applicantStatuses, fundingStatuses, waLink } from "@/lib/site";
 import { WhatsAppIcon } from "./icons/Brand";
 
-const MAX_CV = 4 * 1024 * 1024;
-const CV_ACCEPT = ".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+/** Combined upload limit (Vercel functions accept request bodies up to 4.5 MB). */
+const MAX_TOTAL = 4 * 1024 * 1024;
+const ACCEPT = ".pdf,.doc,.docx,.jpg,.jpeg,.png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png";
+const DOCS = [
+  { key: "idDoc", label: "Certified copy of your ID", need: "a certified copy of your ID", required: true },
+  { key: "qualDoc", label: "Certified highest qualification", need: "a certified copy of your highest qualification", hint: "certified within the last 3 months", required: true },
+  { key: "fundingDoc", label: "Proof of SETA funding", hint: "if available", required: false },
+  { key: "cv", label: "Your CV", hint: "recommended", required: false },
+] as const;
+type DocKey = (typeof DOCS)[number]["key"];
+const mb = (n: number) => (n / 1024 / 1024).toFixed(1);
 
 type Fields = {
   name: string; email: string; phone: string; town: string;
-  qualification: string; institution: string; year: string; status: string;
+  qualification: string; institution: string; year: string; status: string; funding: string;
   motivation: string; website: string;
 };
-const empty: Fields = { name: "", email: "", phone: "", town: "", qualification: "", institution: "", year: "", status: "", motivation: "", website: "" };
+const empty: Fields = { name: "", email: "", phone: "", town: "", qualification: "", institution: "", year: "", status: "", funding: "", motivation: "", website: "" };
 
 export default function CollegeApplyForm() {
   const [f, setF] = useState<Fields>(empty);
-  const [cv, setCv] = useState<File | null>(null);
+  const [files, setFiles] = useState<Partial<Record<DocKey, File>>>({});
   const [consent, setConsent] = useState(false);
   const [err, setErr] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [ref, setRef] = useState("");
   const [serverMsg, setServerMsg] = useState("");
-  const fileInput = useRef<HTMLInputElement>(null);
+  const inputs = useRef<Partial<Record<DocKey, HTMLInputElement | null>>>({});
+  const totalSize = Object.values(files).reduce((n, file) => n + (file?.size ?? 0), 0);
 
   const set = (k: keyof Fields) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setF((v) => ({ ...v, [k]: e.target.value }));
     if (err[k]) setErr((x) => ({ ...x, [k]: "" }));
   };
 
-  const pickCv = (file?: File | null) => {
+  const pickFile = (key: DocKey, file?: File | null) => {
     if (!file) return;
-    if (!/\.(pdf|docx?)$/i.test(file.name)) return setErr((x) => ({ ...x, cv: "Please upload a PDF or Word document." }));
-    if (file.size > MAX_CV) return setErr((x) => ({ ...x, cv: "Your CV must be 4 MB or smaller." }));
-    setErr((x) => ({ ...x, cv: "" }));
-    setCv(file);
+    if (!/\.(pdf|docx?|jpe?g|png)$/i.test(file.name)) return setErr((x) => ({ ...x, [key]: "Please upload a PDF, Word document, JPG or PNG." }));
+    const others = totalSize - (files[key]?.size ?? 0);
+    if (others + file.size > MAX_TOTAL)
+      return setErr((x) => ({ ...x, [key]: `All documents together must be 4 MB or smaller (this file is ${mb(file.size)} MB). Try a PDF scan or a smaller photo.` }));
+    setErr((x) => ({ ...x, [key]: "" }));
+    setFiles((v) => ({ ...v, [key]: file }));
+  };
+  const removeFile = (key: DocKey) => {
+    setFiles((v) => { const n = { ...v }; delete n[key]; return n; });
+    const el = inputs.current[key]; if (el) el.value = "";
   };
 
   function validate() {
@@ -51,6 +67,8 @@ export default function CollegeApplyForm() {
     if (f.institution.trim().length < 2) e.institution = "Enter your university or college.";
     if (!/^\d{4}$/.test(f.year) || y < 1980 || y > now + 2) e.year = "Enter a valid year (e.g. 2025).";
     if (!f.status) e.status = "Select your current status.";
+    if (!f.funding) e.funding = "Select your SETA funding status.";
+    DOCS.forEach((d) => { if (d.required && !files[d.key]) e[d.key] = `Please upload ${"need" in d ? d.need : "this document"}.`; });
     if (f.motivation.trim().length < 20) e.motivation = "Tell us a little more (at least 20 characters).";
     if (!consent) e.consent = "Please give consent so we can process your application.";
     setErr(e);
@@ -67,7 +85,7 @@ export default function CollegeApplyForm() {
     const fd = new FormData();
     Object.entries(f).forEach(([k, v]) => fd.append(k, v));
     fd.append("consent", consent ? "yes" : "no");
-    if (cv) fd.append("cv", cv);
+    DOCS.forEach((d) => { const file = files[d.key]; if (file) fd.append(d.key, file); });
     try {
       const res = await fetch("/api/college-apply", { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
@@ -80,7 +98,7 @@ export default function CollegeApplyForm() {
     }
   }
 
-  const reset = () => { setF(empty); setCv(null); setConsent(false); setStatus("idle"); setErr({}); };
+  const reset = () => { setF(empty); setFiles({}); setConsent(false); setStatus("idle"); setErr({}); };
   const label = "mb-1.5 block text-sm font-semibold text-ez-deep";
   const field = "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-ez-emerald focus:outline-none focus:ring-4 focus:ring-ez-emerald/15";
   const msg = (k: string) => (err[k] ? <p id={`${k}-err`} className="mt-1.5 text-xs font-medium text-red-600">{err[k]}</p> : null);
@@ -124,7 +142,7 @@ export default function CollegeApplyForm() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="font-display text-2xl font-bold text-ez-deep">Application form</h3>
-                <p className="mt-1 text-sm text-slate-500">Fields marked * are required. Takes about 3 minutes.</p>
+                <p className="mt-1 text-sm text-slate-500">Fields marked * are required. Takes about 5 minutes. Have your certified ID and qualification ready.</p>
               </div>
               <span className="hidden rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-ez-emerald sm:block">{college.motto}</span>
             </div>
@@ -200,42 +218,83 @@ export default function CollegeApplyForm() {
                   </div>
                   {msg("status")}
                 </div>
+                <div className="sm:col-span-2">
+                  <p className={label} id="funding-label">SETA funding *</p>
+                  <p className="-mt-0.5 mb-2 text-xs text-slate-500">All learners on the programme must be funded by a SETA.</p>
+                  <div role="radiogroup" aria-labelledby="funding-label" className="flex flex-wrap gap-2">
+                    {fundingStatuses.map((s) => {
+                      const on = f.funding === s;
+                      return (
+                        <button
+                          key={s} type="button" role="radio" aria-checked={on}
+                          onClick={() => { setF((v) => ({ ...v, funding: s })); setErr((x) => ({ ...x, funding: "" })); }}
+                          className={`rounded-full border px-4 py-2.5 text-sm font-medium transition ${on ? "border-ez-emerald bg-ez-emerald text-white" : "border-slate-200 bg-white text-slate-700 hover:border-ez-emerald/50"}`}
+                        >
+                          {s}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {msg("funding")}
+                </div>
               </div>
             </fieldset>
 
             {/* Motivation + CV */}
             <fieldset className="mt-8">
               <legend className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-ez-gold">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-ez-deep text-[11px] text-white">3</span> Motivation &amp; CV
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-ez-deep text-[11px] text-white">3</span> Motivation &amp; documents
               </legend>
               <div>
                 <label htmlFor="a-mot" className={label}>Why do you want to join the programme? *</label>
                 <textarea id="a-mot" rows={4} className={`${field} resize-y`} placeholder="Tell us about your goals and what you hope to gain from workplace experience…" value={f.motivation} onChange={set("motivation")} {...aria("motivation")} />
                 {msg("motivation")}
               </div>
-              <div className="mt-4">
-                <p className={label}>Upload your CV <span className="font-normal text-slate-400">(optional · PDF or Word · max 4 MB)</span></p>
-                {cv ? (
-                  <div className="flex items-center gap-3 rounded-xl border border-ez-emerald/30 bg-emerald-50 px-4 py-3">
-                    <FileText className="h-5 w-5 shrink-0 text-ez-emerald" />
-                    <span className="flex-1 truncate text-sm font-medium text-ez-deep">{cv.name}</span>
-                    <span className="text-xs text-slate-500">{(cv.size / 1024 / 1024).toFixed(1)} MB</span>
-                    <button type="button" onClick={() => { setCv(null); if (fileInput.current) fileInput.current.value = ""; }} aria-label="Remove CV" className="grid h-7 w-7 place-items-center rounded-full hover:bg-white">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <label
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => { e.preventDefault(); pickCv(e.dataTransfer.files?.[0]); }}
-                    className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 px-4 py-7 text-center transition hover:border-ez-emerald/50 hover:bg-emerald-50/50"
-                  >
-                    <Upload className="h-6 w-6 text-ez-emerald" />
-                    <span className="text-sm font-medium text-ez-deep">Click to upload or drag your CV here</span>
-                    <input ref={fileInput} type="file" accept={CV_ACCEPT} className="sr-only" onChange={(e) => pickCv(e.target.files?.[0])} />
-                  </label>
-                )}
-                {msg("cv")}
+              <div className="mt-6">
+                <p className={label}>Supporting documents</p>
+                <p className="-mt-0.5 mb-3 text-xs text-slate-500">PDF, Word, JPG or PNG · all files together max 4 MB · {mb(totalSize)} MB used</p>
+                <div className="space-y-3">
+                  {DOCS.map((d) => {
+                    const file = files[d.key];
+                    return (
+                      <div key={d.key}>
+                        {file ? (
+                          <div className="flex items-center gap-3 rounded-xl border border-ez-emerald/30 bg-emerald-50 px-4 py-3">
+                            <FileText className="h-5 w-5 shrink-0 text-ez-emerald" />
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-xs font-semibold text-ez-emerald">{d.label}</span>
+                              <span className="block truncate text-sm font-medium text-ez-deep">{file.name}</span>
+                            </span>
+                            <span className="shrink-0 text-xs text-slate-500">{mb(file.size)} MB</span>
+                            <button type="button" onClick={() => removeFile(d.key)} aria-label={`Remove ${d.label}`} className="grid h-7 w-7 shrink-0 place-items-center rounded-full hover:bg-white">
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <label
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => { e.preventDefault(); pickFile(d.key, e.dataTransfer.files?.[0]); }}
+                            className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed px-4 py-3.5 transition hover:border-ez-emerald/50 hover:bg-emerald-50/50 ${err[d.key] ? "border-red-300" : "border-slate-200"}`}
+                          >
+                            <Upload className="h-5 w-5 shrink-0 text-ez-emerald" />
+                            <span className="min-w-0 flex-1 text-sm">
+                              <span className="font-semibold text-ez-deep">{d.label}{d.required ? " *" : ""}</span>
+                              {"hint" in d && d.hint && <span className="text-slate-500"> · {d.hint}</span>}
+                            </span>
+                            <span className="shrink-0 text-xs font-semibold text-ez-emerald">Upload</span>
+                            <input
+                              ref={(el) => { inputs.current[d.key] = el; }}
+                              type="file" accept={ACCEPT} className="sr-only"
+                              aria-invalid={!!err[d.key]} aria-describedby={err[d.key] ? `${d.key}-err` : undefined}
+                              onChange={(e) => pickFile(d.key, e.target.files?.[0])}
+                            />
+                          </label>
+                        )}
+                        {msg(d.key)}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </fieldset>
 
@@ -252,7 +311,7 @@ export default function CollegeApplyForm() {
                 {...aria("consent")}
               />
               <span className="text-sm text-slate-600">
-                I consent to {college.legalName} and S Packery Inc. processing my personal information (including my CV) to assess my application, as described in the{" "}
+                I consent to {college.legalName} and S Packery Inc. processing my personal information (including my ID, qualification and other documents) to assess my application and, if I am accepted, to apply for SETA funding, as described in the{" "}
                 <Link href="/privacy" target="_blank" className="font-semibold text-ez-emerald underline underline-offset-2">Privacy Notice</Link>. I can withdraw consent at any time. *
               </span>
             </label>

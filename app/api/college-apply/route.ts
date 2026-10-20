@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
-import { qualifications, applicantStatuses, college } from "@/lib/site";
+import { qualifications, applicantStatuses, fundingStatuses, college } from "@/lib/site";
 
 export const runtime = "nodejs";
 
-const MAX_CV = 4 * 1024 * 1024;
-const CV_TYPES: Record<string, string> = {
+const MAX_TOTAL = 4 * 1024 * 1024;
+const FILE_TYPES: Record<string, string> = {
   "application/pdf": "pdf",
   "application/msword": "doc",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+  "image/jpeg": "jpg",
+  "image/png": "png",
 };
+const DOCS = [
+  { key: "idDoc", label: "Certified ID", prefix: "ID", required: true },
+  { key: "qualDoc", label: "Certified qualification", prefix: "Qualification", required: true },
+  { key: "fundingDoc", label: "Proof of SETA funding", prefix: "SETA-funding", required: false },
+  { key: "cv", label: "CV", prefix: "CV", required: false },
+] as const;
 const hits = new Map<string, number[]>();
 const str = (v: FormDataEntryValue | null, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -36,6 +44,7 @@ export async function POST(req: Request) {
     institution: str(fd.get("institution"), 160),
     year,
     status: str(fd.get("status"), 60),
+    funding: str(fd.get("funding"), 60),
     motivation: str(fd.get("motivation"), 3000),
     consent: fd.get("consent") === "yes",
   };
@@ -50,19 +59,28 @@ export async function POST(req: Request) {
     d.institution.length >= 2 &&
     /^\d{4}$/.test(year) && +year >= 1980 && +year <= thisYear + 2 &&
     applicantStatuses.includes(d.status) &&
+    fundingStatuses.includes(d.funding) &&
     d.motivation.length >= 20 &&
     d.consent;
   if (!valid) return NextResponse.json({ error: "Please check the form fields." }, { status: 422 });
 
-  // Optional CV
-  let attachment: { filename: string; content: string } | undefined;
-  const cv = fd.get("cv");
-  if (cv && typeof cv !== "string" && cv.size > 0) {
-    const ext = CV_TYPES[cv.type];
-    if (!ext) return NextResponse.json({ error: "CV must be a PDF or Word document." }, { status: 422 });
-    if (cv.size > MAX_CV) return NextResponse.json({ error: "CV must be 4 MB or smaller." }, { status: 422 });
-    const safe = d.name.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 40) || "applicant";
-    attachment = { filename: `CV-${safe}-${reference}.${ext}`, content: Buffer.from(await cv.arrayBuffer()).toString("base64") };
+  // Supporting documents: certified ID and qualification are required; funding proof and CV optional.
+  const safe = d.name.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 40) || "applicant";
+  const attachments: { filename: string; content: string }[] = [];
+  const received: string[] = [];
+  let total = 0;
+  for (const doc of DOCS) {
+    const file = fd.get(doc.key);
+    if (!file || typeof file === "string" || file.size === 0) {
+      if (doc.required) return NextResponse.json({ error: `Please upload your ${doc.label.toLowerCase()}.` }, { status: 422 });
+      continue;
+    }
+    const ext = FILE_TYPES[file.type];
+    if (!ext) return NextResponse.json({ error: `${doc.label} must be a PDF, Word document, JPG or PNG.` }, { status: 422 });
+    total += file.size;
+    if (total > MAX_TOTAL) return NextResponse.json({ error: "Documents must be 4 MB or smaller in total." }, { status: 422 });
+    attachments.push({ filename: `${doc.prefix}-${safe}-${reference}.${ext}`, content: Buffer.from(await file.arrayBuffer()).toString("base64") });
+    received.push(doc.label);
   }
 
   const { RESEND_API_KEY, CONTACT_FROM_EMAIL } = process.env;
@@ -74,7 +92,7 @@ export async function POST(req: Request) {
 <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">
 ${row("Name", d.name)}${row("Email", d.email)}${row("Phone", d.phone)}${row("Town / area", d.town)}
 ${row("Qualification", d.qualification)}${row("Institution", d.institution)}${row("Year completed", d.year)}${row("Status", d.status)}
-${row("CV attached", attachment ? "Yes" : "No")}
+${row("SETA funding", d.funding)}${row("Documents attached", received.join(", "))}
 </table><h3 style="font-family:sans-serif">Motivation</h3><p style="font-family:sans-serif;font-size:14px">${esc(d.motivation).replace(/\n/g, "<br/>")}</p>`;
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -85,7 +103,7 @@ ${row("CV attached", attachment ? "Yes" : "No")}
         reply_to: d.email,
         subject: `${college.name} application ${reference} — ${d.name}`,
         html,
-        attachments: attachment ? [attachment] : undefined,
+        attachments,
       }),
     });
     if (!res.ok) {
@@ -95,7 +113,7 @@ ${row("CV attached", attachment ? "Yes" : "No")}
   } else {
     // Email not configured: avoid writing personal information to production logs (POPIA s19).
     if (process.env.NODE_ENV === "production") console.warn(`[college-apply] ${reference} received but email delivery is NOT configured — set RESEND_API_KEY and COLLEGE_TO_EMAIL/CONTACT_TO_EMAIL.`);
-    else console.info(`[college-apply] ${reference} received (email delivery not configured):`, { ...d, cv: attachment?.filename ?? "none" });
+    else console.info(`[college-apply] ${reference} received (email delivery not configured):`, { ...d, documents: attachments.map((x) => x.filename) });
   }
 
   return NextResponse.json({ ok: true, reference });

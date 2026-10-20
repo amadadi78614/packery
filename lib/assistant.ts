@@ -2,7 +2,7 @@
    Answers come only from the firm's own published content (brochures, Business Profile, site copy).
    Deliberately NOT an AI model: no improvised tax/audit advice. Anything unmatched is handed to the team on WhatsApp. */
 
-import { site, college, fullAddress, waLink, waMessages } from "./site";
+import { site, college, collegeRequirements, fullAddress, waLink, waMessages } from "./site";
 
 export type Action = { label: string; href: string; external?: boolean; kind?: "primary" | "whatsapp" | "ghost" };
 export type Answer = { text: string; actions?: Action[]; followUps?: string[] };
@@ -50,18 +50,18 @@ const intents: Intent[] = [
   },
   {
     id: "audit",
-    keywords: ["audit", "audits", "auditor", "auditors", "statutory", "independent review", "assurance", "irba", "audited", "school audit", "department of education"],
+    keywords: ["audit", "audits", "auditor", "auditors", "statutory", "independent review", "assurance", "irba", "audited", "school audit", "school", "schools", "department of education", "attorney", "attorneys", "trust account", "lawyer", "legal practice", "lpc"],
     answer: () => ({
-      text: "S Packery Inc. is a specialised auditing firm registered with IRBA, and approved on the list of auditors for the Department of Education, Mpumalanga. We do statutory audits, forensic audits and assurance work, and consult to government departments. Not sure whether you need an audit or an independent review? We'll assess that for you.",
+      text: "S Packery Inc. is a specialised auditing firm registered with IRBA, and approved on the list of auditors for the Department of Education, Mpumalanga. We do statutory audits, attorney trust account audits, school audits, forensic audits and assurance work, and consult to government departments. Not sure whether you need an audit or an independent review? We'll assess that for you.",
       actions: [quote("auditing"), { label: "Auditing services", href: "/services/auditing", kind: "ghost" }],
       followUps: ["Forensic investigation", "Get a quote"],
     }),
   },
   {
     id: "accounting",
-    keywords: ["accounting", "accountant", "books", "bookkeeping", "financial statements", "afs", "annual financial", "management accounts", "monthly accounts", "pastel", "sage", "ledger", "reconciliation"],
+    keywords: ["accounting", "accountant", "books", "bookkeeping", "financial statements", "afs", "annual financial", "management accounts", "monthly accounts", "pastel", "sage", "ledger", "reconciliation", "payroll", "payslip", "payslips", "salaries", "wages", "uif", "sdl"],
     answer: () => ({
-      text: "We provide monthly management accounts, compilation of annual financial statements, personal and business accounting, business and annual operating plans, and administrative costing. We're also registered Pastel MBO advisors.",
+      text: "We provide monthly management accounts, compilation of annual financial statements, payroll services, personal and business accounting, business and annual operating plans, and administrative costing. We're also registered Pastel MBO advisors.",
       actions: [quote("accounting"), { label: "Accounting services", href: "/services/accounting", kind: "ghost" }],
       followUps: ["Tax & SARS help", "Get a quote"],
     }),
@@ -96,16 +96,24 @@ const intents: Intent[] = [
     id: "college",
     keywords: ["college", "ez", "internship", "intern", "learnership", "graduate", "apply", "application", "requirements", "programme", "program", "training", "student", "seta", "job", "work experience", "vacancy"],
     answer: () => ({
-      text: `${college.name} is our sister division — an ${college.programme} that gives finance graduates real workplace experience, mentorship and a pathway to professional accreditation. Requirements are confirmed per intake; apply online or ask us on WhatsApp.`,
+      text: `${college.name} is our sister division. ${college.accreditation}, a 12 to 18 month programme with real workplace training and mentorship. You need ${collegeRequirements.minimum.replace(/^An/, "an")}, and all learners must be SETA-funded. Apply online or ask us on WhatsApp.`,
       actions: [{ label: "Apply online", href: "/college#apply", kind: "primary" }, wa(waMessages.college)],
-      followUps: ["How long is it?", "Is it funded?"],
+      followUps: ["Requirements", "Is it funded?"],
+    }),
+  },
+  {
+    id: "job-shadowing",
+    keywords: ["job shadow", "job shadowing", "shadowing", "shadow", "experience day", "school learner", "work exposure"],
+    answer: (onCollege) => ({
+      text: "Yes, we offer job shadowing. Students can spend time at S Packery Inc. to see the day-to-day work of a chartered accountancy and audit firm. WhatsApp us to arrange it.",
+      actions: [wa("Good day S Packery Inc, I'd like to arrange job shadowing at your firm."), ...(onCollege ? [] : [{ label: "EZ Accounting College", href: "/college", kind: "ghost" as const }])],
     }),
   },
   {
     id: "college-length",
     keywords: ["how long", "duration", "months", "length"],
     answer: () => ({
-      text: `The EZ Accounting College programme is an ${college.programme}, giving hands-on exposure inside a working chartered accountancy and audit practice.`,
+      text: `${college.accreditation}. The programme runs for 12 to 18 months, with hands-on training inside a working chartered accountancy and audit practice.`,
       actions: [{ label: "Apply online", href: "/college#apply", kind: "primary" }],
     }),
   },
@@ -113,7 +121,7 @@ const intents: Intent[] = [
     id: "college-funding",
     keywords: ["funded", "funding", "free", "pay", "paid", "cost", "costs", "fee", "fees", "how much", "price", "stipend", "salary", "cost of college"],
     answer: () => ({
-      text: "The EZ Accounting College programme is sustained through the SETA funding system. The college confirms the details for each intake — ask us on WhatsApp for the current position.",
+      text: "All learners on the programme must be funded by a SETA. If your funding isn't confirmed yet, you can still apply and tell us on the form, and the college will advise you. If you have proof of funding, upload it with your application.",
       actions: [wa(waMessages.college), { label: "Apply online", href: "/college#apply", kind: "ghost" }],
     }),
   },
@@ -129,7 +137,7 @@ const intents: Intent[] = [
     id: "college-docs",
     keywords: ["documents", "document", "what do i need", "id copy", "transcript", "academic record", "certificate", "certified", "qualify", "eligible", "eligibility", "requirement", "requirements"],
     answer: () => ({
-      text: "The programme is for finance and accounting graduates. Exact requirements and the documents needed are confirmed for each intake — the application form takes about 3 minutes and you can attach your CV. The college will then tell you what else to provide.",
+      text: `Requirements: ${collegeRequirements.minimum.replace(/^An/, "an")}, and SETA funding. Upload these with the online application: a certified copy of your highest qualification (certified within the last 3 months), a certified copy of your ID, proof of SETA funding if available, and your CV.`,
       actions: [{ label: "Apply online", href: "/college#apply", kind: "primary" }, wa(waMessages.college)],
       followUps: ["How long is it?", "Is it funded?", "When is the next intake?"],
     }),
@@ -138,7 +146,7 @@ const intents: Intent[] = [
     id: "location",
     keywords: ["where", "address", "location", "located", "directions", "office", "find you", "map", "hours", "open", "closing", "close", "time", "visit", "sonheuwel", "nelspruit", "mbombela"],
     answer: () => ({
-      text: `We're at ${fullAddress}. Office hours: ${site.hours}. We serve clients across South Africa — from Gauteng to Barberton.`,
+      text: `We're at ${fullAddress}. Office hours: Monday to Thursday 08:00–16:30, Friday 08:00–12:00 and 14:00–16:00. We serve clients across South Africa — from Gauteng to Barberton.`,
       actions: [{ label: "Get directions", href: site.mapsUrl, external: true, kind: "primary" }, { label: "Contact page", href: "/contact", kind: "ghost" }],
     }),
   },
@@ -152,9 +160,9 @@ const intents: Intent[] = [
   },
   {
     id: "accreditation",
-    keywords: ["saica", "accredited", "accreditation", "registered", "member", "nafco", "legit", "trust"],
+    keywords: ["saica", "accredited", "accreditation", "registered", "member", "legit", "trust", "registration number"],
     answer: () => ({
-      text: "We're members of SAICA, registered with IRBA, registered SARS tax practitioners, accredited CIPC online agents, NAFCO preferred partners and approved auditors for the Department of Education, Mpumalanga.",
+      text: `We're members of SAICA, registered with IRBA, registered SARS tax practitioners, accredited CIPC online agents and approved auditors for the Department of Education, Mpumalanga. Company registration number: ${site.regNo}.`,
       actions: [{ label: "About the firm", href: "/about", kind: "ghost" }],
     }),
   },
@@ -183,12 +191,12 @@ const chipIntent: Record<string, string> = {
   "Get a quote": "quote", "Tax & SARS help": "tax", "I got a SARS letter": "sars", "I need an audit": "audit",
   "Forensic investigation": "forensic", "Register a company": "company", "BEE certificate": "bee", "Tax clearance": "tax",
   "EZ College": "college", "How do I apply?": "college", "Requirements": "college-docs", "How long is it?": "college-length",
-  "Is it funded?": "college-funding", "When is the next intake?": "college-intake", "Where are you?": "location", "Talk to a person": "human", "Who's the team?": "team",
+  "Is it funded?": "college-funding", "Job shadowing": "job-shadowing", "When is the next intake?": "college-intake", "Where are you?": "location", "Talk to a person": "human", "Who's the team?": "team",
 };
 
 export const starterChips = {
   firm: ["Get a quote", "Tax & SARS help", "I need an audit", "Register a company", "EZ College", "Where are you?", "Talk to a person"],
-  college: ["How do I apply?", "Requirements", "How long is it?", "Is it funded?", "When is the next intake?", "Talk to a person"],
+  college: ["How do I apply?", "Requirements", "How long is it?", "Is it funded?", "Job shadowing", "Talk to a person"],
 };
 
 export const greeting = {
