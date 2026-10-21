@@ -160,9 +160,9 @@ const intents: Intent[] = [
   },
   {
     id: "accreditation",
-    keywords: ["saica", "accredited", "accreditation", "registered", "member", "nafco", "legit", "trust", "registration number"],
+    keywords: ["saica", "accredited", "accreditation", "registered", "member", "legit", "trust", "registration number"],
     answer: () => ({
-      text: `We're members of SAICA, registered with IRBA, registered SARS tax practitioners, accredited CIPC online agents, NAFCO preferred partners and approved auditors for the Department of Education, Mpumalanga. Company registration number: ${site.regNo}.`,
+      text: `We're members of SAICA, registered with IRBA, registered SARS tax practitioners, accredited CIPC online agents and approved auditors for the Department of Education, Mpumalanga. Company registration number: ${site.regNo}.`,
       actions: [{ label: "About the firm", href: "/about", kind: "ghost" }],
     }),
   },

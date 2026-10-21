@@ -35,7 +35,6 @@ export const site = {
     { short: "SARS", name: "Registered Tax Practitioners" },
     { short: "DoE", name: "Approved auditors · Department of Education, Mpumalanga" },
     { short: "CIPC", name: "Accredited online agents" },
-    { short: "NAFCO", name: "Preferred partners" },
   ],
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=12+de+Kock+Street,+Sonheuwel,+Nelspruit,+1200",
   mapsEmbed: "https://www.google.com/maps?q=12+de+Kock+Street,+Sonheuwel,+Nelspruit,+1200&output=embed",
