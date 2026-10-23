@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formEndpoint } from "@/lib/endpoints";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, AlertCircle, Send, Star } from "lucide-react";
@@ -46,7 +47,7 @@ export default function TestimonialForm() {
     if (!validate()) { document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus(); return; }
     setStatus("sending");
     try {
-      const res = await fetch("/api/testimonial", {
+      const res = await fetch(formEndpoint("testimonial"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...f, rating, publish, consent }),

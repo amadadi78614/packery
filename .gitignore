@@ -4,3 +4,5 @@ out
 .env*.local
 next-env.d.ts
 *.tsbuildinfo
+.afrihost-build-parked-api
+afrihost/api/_config.php

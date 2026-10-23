@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { formEndpoint } from "@/lib/endpoints";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, AlertCircle, Upload, FileText, X, Send, ShieldCheck } from "lucide-react";
@@ -87,7 +88,7 @@ export default function CollegeApplyForm() {
     fd.append("consent", consent ? "yes" : "no");
     DOCS.forEach((d) => { const file = files[d.key]; if (file) fd.append(d.key, file); });
     try {
-      const res = await fetch("/api/college-apply", { method: "POST", body: fd });
+      const res = await fetch(formEndpoint("college-apply"), { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Something went wrong.");
       setRef(data.reference || "");

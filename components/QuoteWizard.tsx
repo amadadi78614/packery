@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formEndpoint } from "@/lib/endpoints";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Loader2, AlertCircle, Clock, ShieldCheck, Sparkles } from "lucide-react";
 import { services, clientTypes, turnoverBands, timelines, site, waLink, waMessages } from "@/lib/site";
@@ -75,7 +76,7 @@ export default function QuoteWizard() {
     if (!validate(2)) return;
     setStatus("sending");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(formEndpoint("contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kind: "quote", ...f }),

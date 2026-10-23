@@ -53,6 +53,18 @@ Testimonials (`/api/testimonial`) go to `CONTACT_TO_EMAIL` with reference TS-XXX
 
 On Vercel, add the same keys under Project → Settings → Environment Variables.
 
+## Hosting on Afrihost (Windows/IIS + PHP)
+The same code also builds as a static site with PHP form handlers, for the firm's Afrihost "Windows Gold Home" package (PHP 8.3):
+```bash
+npm run build:afrihost   # → ./out (static pages + /api/*.php + web.config)
+```
+- Forms post to `/api/contact.php`, `/api/college-apply.php`, `/api/testimonial.php` (PHPMailer, sending through the firm's own mailbox).
+- Mail settings live in `api/_config.php` on the server (template: `afrihost/api/_config.sample.php`). Never commit it.
+- `web.config` sets the default document, the 404 page, font MIME types, caching and security headers.
+- Automatic deploys: `.github/workflows/deploy-afrihost.yml` (FTP). Enable with repo variable `AFRIHOST_DEPLOY=true`
+  and secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `SMTP_PASSWORD`.
+- Google reviews are fetched at build time on this host (they refresh on each deploy).
+
 ## Ask-us assistant ("Ollie")
 Animated owl mascot (`components/assistant/`) on every page: blinks, follows the cursor, waves, wears a graduation cap on `/college`.
 Answers come only from `lib/assistant.ts` (the firm's own content) — no AI model, so no improvised tax advice.

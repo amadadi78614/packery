@@ -1,0 +1,66 @@
+# Builds the Afrihost (Windows/IIS + PHP) version of the site and uploads it by FTP.
+# Enable it by setting the repository variable AFRIHOST_DEPLOY=true and adding the secrets below
+# (GitHub → Settings → Secrets and variables → Actions).
+#
+# Secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, SMTP_PASSWORD
+# Variables: AFRIHOST_DEPLOY=true, FTP_SERVER_DIR (default "wwwroot/"), FTP_PROTOCOL (default "ftp"),
+#            SMTP_HOST (default envoy.aserv.co.za), SMTP_PORT (587), SMTP_SECURE (tls),
+#            SMTP_USER / MAIL_FROM (website@packery.co.za), MAIL_TO / COLLEGE_TO (admin@packery.co.za)
+name: Deploy to Afrihost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: afrihost-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: vars.AFRIHOST_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build:afrihost
+
+      - name: Write mail settings (_config.php)
+        env:
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_HOST: ${{ vars.SMTP_HOST || 'envoy.aserv.co.za' }}
+          SMTP_PORT: ${{ vars.SMTP_PORT || '587' }}
+          SMTP_SECURE: ${{ vars.SMTP_SECURE || 'tls' }}
+          SMTP_USER: ${{ vars.SMTP_USER || 'website@packery.co.za' }}
+          MAIL_FROM: ${{ vars.MAIL_FROM || 'website@packery.co.za' }}
+          MAIL_TO: ${{ vars.MAIL_TO || 'admin@packery.co.za' }}
+          COLLEGE_TO: ${{ vars.COLLEGE_TO || 'admin@packery.co.za' }}
+        run: |
+          php -r '
+            $c = [
+              "transport" => "smtp",
+              "smtp_host" => getenv("SMTP_HOST"), "smtp_port" => (int) getenv("SMTP_PORT"),
+              "smtp_secure" => getenv("SMTP_SECURE"), "smtp_user" => getenv("SMTP_USER"),
+              "smtp_pass" => getenv("SMTP_PASSWORD"), "from" => getenv("MAIL_FROM"),
+              "from_name" => "S Packery Website", "to" => getenv("MAIL_TO"), "college_to" => getenv("COLLEGE_TO"),
+            ];
+            file_put_contents("out/api/_config.php", "<?php\nreturn " . var_export($c, true) . ";\n");
+          '
+
+      - name: Upload by FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+          local-dir: ./out/
+          server-dir: ${{ vars.FTP_SERVER_DIR || 'wwwroot/' }}
