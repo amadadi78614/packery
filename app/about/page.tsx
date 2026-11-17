@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About Us & Our Team",
   description:
-    "S Packery Inc. — Nelspruit chartered accountants and registered auditors since June 2013. Meet founder Suhayl Packery CA(SA) and Ishaq Packery, Head of Risk & Legal.",
+    "S Packery Inc. — Nelspruit chartered accountants and registered auditors since June 2013. Meet founder and managing director Suhayl Packery CA(SA).",
 };
 
 export default function AboutPage() {

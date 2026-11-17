@@ -19,6 +19,7 @@ npm run build && npm start
 | `/college` | EZ Accounting College (emerald and gold brand): programme, how to apply, application form with CV upload |
 | `/quote` | 3-step quote wizard (`/quote?service=auditing` preselects a service) |
 | `/contact` | Contact cards and map |
+| `/magazine` | Firm magazine: latest issue, page reader, PDF download (`lib/magazine.ts`) |
 | `/review` | Client feedback: Google review button + testimonial form (emailed to the firm with consent record) |
 
 Each page has its own title and description for Google. `sitemap.xml` and `robots.txt` are generated automatically.
@@ -64,6 +65,10 @@ npm run build:afrihost   # → ./out (static pages + /api/*.php + web.config)
 - Automatic deploys: `.github/workflows/deploy-afrihost.yml` (FTP). Enable with repo variable `AFRIHOST_DEPLOY=true`
   and secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `SMTP_PASSWORD`.
 - Google reviews are fetched at build time on this host (they refresh on each deploy).
+
+## Magazine
+Issues live in `lib/magazine.ts` (newest first). For a new issue, add `public/magazine/<slug>/page-N.jpg`, `page-N-thumb.jpg`
+and the PDF, then add an entry at the top of the list. The home page shows the latest issue automatically.
 
 ## Ask-us assistant ("Ollie")
 Animated owl mascot (`components/assistant/`) on every page: blinks, follows the cursor, waves, wears a graduation cap on `/college`.

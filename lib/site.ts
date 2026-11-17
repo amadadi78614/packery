@@ -91,20 +91,15 @@ export const team: Leader[] = [
       { org: "PwC", role: "IFRS Manager · articles at PwC Sunninghill", years: "2003 – 2006" },
     ],
   },
-  {
-    name: "Ishaq Packery",
-    initials: "IP",
-    role: "Head of Risk & Legal",
-    subtitle: "Legal strategist · Actuarial specialist",
-    qualifications: ["BSc Hons Actuarial Science"],
-    experience: [
-      { org: "S Packery Inc.", role: "Manager, Risk", years: "2018 – present" },
-      { org: "MMI Holdings", role: "Actuarial Specialist", years: "2014 – 2018" },
-      { org: "Metropolitan Life", role: "Actuarial Specialist", years: "2012 – 2014" },
-      { org: "Momentum Life", role: "Actuarial Consultant", years: "2009 – 2012" },
-    ],
-  },
 ];
+
+/** Consulting partner. Referenced as a firm, not an individual (client request, 17 Nov 2026). */
+export const consultingPartner = {
+  name: "Beta Konsult",
+  initials: "BK",
+  role: "Consulting partner",
+  description: "S Packery Inc. works with Beta Konsult, its consulting partner, on risk and legal matters for clients.",
+};
 
 /** Suhayl's own words, from the Business Profile. */
 export const founderQuote =
@@ -254,6 +249,7 @@ export const nav: NavItem[] = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services", dropdown: true },
   { label: "EZ College", href: "/college" },
+  { label: "Magazine", href: "/magazine" },
   { label: "Contact", href: "/contact" },
 ];
 

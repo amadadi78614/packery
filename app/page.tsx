@@ -8,6 +8,7 @@ import AboutTeaser from "@/components/AboutTeaser";
 import CollegeTeaser from "@/components/CollegeTeaser";
 import CtaBand from "@/components/CtaBand";
 import SocialProof from "@/components/SocialProof";
+import MagazineTeaser from "@/components/MagazineTeaser";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <ServicesGrid />
       <Process />
       <AboutTeaser />
+      <MagazineTeaser />
       <SocialProof />
       <CollegeTeaser />
       <CtaBand />

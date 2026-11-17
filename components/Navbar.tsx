@@ -51,7 +51,7 @@ export default function Navbar() {
           <Logo light={!solid} />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
           {nav.map((n) => {
             const active = isActive(n.href);
             const color = solid
@@ -65,11 +65,11 @@ export default function Navbar() {
                     aria-haspopup="true"
                     aria-expanded={menu}
                     onFocus={openMenu}
-                    className={`relative flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors ${color}`}
+                    className={`relative flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors xl:px-4 ${color}`}
                   >
                     {n.label}
                     <ChevronDown className={`h-3.5 w-3.5 transition-transform ${menu ? "rotate-180" : ""}`} />
-                    {active && <motion.span layoutId="nav-dot" className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-accent-500" />}
+                    {active && <motion.span layoutId="nav-dot" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-accent-500 xl:inset-x-4" />}
                   </Link>
                   <AnimatePresence>
                     {menu && (
@@ -115,25 +115,25 @@ export default function Navbar() {
               );
             }
             return (
-              <Link key={n.href} href={n.href} className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${color}`}>
+              <Link key={n.href} href={n.href} className={`relative whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors xl:px-4 ${color}`}>
                 {n.label}
-                {active && <motion.span layoutId="nav-dot" className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-accent-500" />}
+                {active && <motion.span layoutId="nav-dot" className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-accent-500 xl:inset-x-4" />}
               </Link>
             );
           })}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
-          <a href={site.phoneHref} className={`hidden items-center gap-2 text-sm font-medium xl:flex ${solid ? "text-navy-900" : "text-white"}`}>
+        <div className="hidden items-center gap-4 xl:flex">
+          <a href={site.phoneHref} className={`hidden items-center gap-2 whitespace-nowrap text-sm font-medium 2xl:flex ${solid ? "text-navy-900" : "text-white"}`}>
             <Phone className="h-4 w-4 text-accent-500" aria-hidden />
             {site.phoneDisplay}
           </a>
           {isCollege ? (
-            <a href="#apply" className="btn group bg-ez-gold py-2.5 text-ez-deep hover:bg-ez-light">
+            <a href="#apply" className="btn group whitespace-nowrap bg-ez-gold py-2.5 text-ez-deep hover:bg-ez-light">
               Apply now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
             </a>
           ) : (
-            <Link href="/quote" className="btn-accent group py-2.5">
+            <Link href="/quote" className="btn-accent group whitespace-nowrap py-2.5">
               Get a Quote <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
             </Link>
           )}
@@ -141,7 +141,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className={`grid h-10 w-10 place-items-center rounded-full lg:hidden ${solid ? "text-navy-900" : "text-white"}`}
+          className={`grid h-10 w-10 place-items-center rounded-full xl:hidden ${solid ? "text-navy-900" : "text-white"}`}
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-menu"
@@ -161,7 +161,7 @@ export default function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="h-[calc(100svh-4.5rem)] overflow-y-auto border-t border-slate-200 bg-white lg:hidden"
+            className="h-[calc(100svh-4.5rem)] overflow-y-auto border-t border-slate-200 bg-white xl:hidden"
           >
             <nav className="container-site flex flex-col py-4" aria-label="Mobile">
               {nav.map((n) =>

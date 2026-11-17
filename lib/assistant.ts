@@ -143,6 +143,14 @@ const intents: Intent[] = [
     }),
   },
   {
+    id: "magazine",
+    keywords: ["magazine", "newsletter", "issue", "article", "articles", "publication", "accounting equation"],
+    answer: () => ({
+      text: "We publish the S Packery magazine with practical accounting and business insights. Read the latest issue online or download it as a PDF.",
+      actions: [{ label: "Read the magazine", href: "/magazine", kind: "primary" }],
+    }),
+  },
+  {
     id: "location",
     keywords: ["where", "address", "location", "located", "directions", "office", "find you", "map", "hours", "open", "closing", "close", "time", "visit", "sonheuwel", "nelspruit", "mbombela"],
     answer: () => ({
@@ -152,9 +160,9 @@ const intents: Intent[] = [
   },
   {
     id: "team",
-    keywords: ["who", "team", "suhayl", "ishaq", "partner", "director", "owner", "chartered accountant", "ca(sa)", "qualified", "experience", "about"],
+    keywords: ["who", "team", "suhayl", "beta konsult", "konsult", "partner", "director", "owner", "chartered accountant", "ca(sa)", "qualified", "experience", "about"],
     answer: () => ({
-      text: "The firm is led by founder Suhayl Packery CA(SA), a registered IRBA auditor, University of Johannesburg alumnus and PwC-trained, and Ishaq Packery, Head of Risk & Legal with an actuarial background. Established in June 2013 in Nelspruit.",
+      text: "The firm is led by founder and managing director Suhayl Packery CA(SA), a registered IRBA auditor, University of Johannesburg alumnus and PwC-trained. Our consulting partner Beta Konsult works with us on risk and legal matters. Established in June 2013 in Nelspruit.",
       actions: [{ label: "Meet the team", href: "/about", kind: "primary" }],
     }),
   },
