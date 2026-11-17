@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Quote, CheckCircle2, Briefcase, GraduationCap, Handshake } from "lucide-react";
-import { site, team, consultingPartner, founderQuote, commitments, yearsInPractice } from "@/lib/site";
+import { Quote, CheckCircle2, Briefcase, GraduationCap } from "lucide-react";
+import { site, team, founderQuote, commitments, yearsInPractice } from "@/lib/site";
 import { Reveal, CountUp, stagger, rise } from "./motion";
 
 export default function About() {
@@ -45,7 +45,7 @@ export default function About() {
         <div className="mt-20">
           <Reveal>
             <span className="eyebrow">Leadership</span>
-            <h3 className="mt-3 font-display text-3xl font-bold tracking-tight text-navy-900">Leadership and partners.</h3>
+            <h3 className="mt-3 font-display text-3xl font-bold tracking-tight text-navy-900">Meet the people behind the numbers.</h3>
           </Reveal>
 
           <motion.div
@@ -78,7 +78,7 @@ export default function About() {
                 <div className="grid gap-6 p-7 sm:grid-cols-[1fr_1.3fr]">
                   <div>
                     <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      <GraduationCap className="h-4 w-4 text-accent-600" /> Qualifications
+                      <GraduationCap className="h-4 w-4 text-accent-600" /> {p.qualificationsLabel ?? "Qualifications"}
                     </p>
                     <ul className="mt-3 space-y-2">
                       {p.qualifications.map((q) => (
@@ -90,14 +90,14 @@ export default function About() {
                   </div>
                   <div>
                     <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      <Briefcase className="h-4 w-4 text-accent-600" /> Experience
+                      <Briefcase className="h-4 w-4 text-accent-600" /> {p.experienceLabel ?? "Experience"}
                     </p>
                     <ol className="relative mt-3 space-y-3 border-l border-slate-200 pl-4">
                       {p.experience.map((e) => (
                         <li key={e.org + e.years} className="relative">
                           <span className="absolute -left-[1.3rem] top-1.5 h-2 w-2 rounded-full bg-accent-500 ring-4 ring-white" aria-hidden />
                           <p className="text-sm font-semibold text-navy-900">{e.org}</p>
-                          <p className="text-xs text-slate-500">{e.role} · {e.years}</p>
+                          <p className="text-xs text-slate-500">{e.years ? `${e.role} · ${e.years}` : e.role}</p>
                         </li>
                       ))}
                     </ol>
@@ -105,21 +105,6 @@ export default function About() {
                 </div>
               </motion.article>
             ))}
-            <motion.article
-              variants={rise}
-              className="flex flex-col justify-center rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:self-start"
-            >
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                <Handshake className="h-4 w-4 text-accent-600" /> {consultingPartner.role}
-              </p>
-              <div className="mt-4 flex items-center gap-5">
-                <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border-2 border-accent-400 font-display text-xl font-bold text-navy-900">
-                  {consultingPartner.initials}
-                </span>
-                <h4 className="font-display text-2xl font-bold text-navy-900">{consultingPartner.name}</h4>
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-slate-600">{consultingPartner.description}</p>
-            </motion.article>
           </motion.div>
         </div>
 

@@ -162,7 +162,7 @@ const intents: Intent[] = [
     id: "team",
     keywords: ["who", "team", "suhayl", "beta konsult", "konsult", "partner", "director", "owner", "chartered accountant", "ca(sa)", "qualified", "experience", "about"],
     answer: () => ({
-      text: "The firm is led by founder and managing director Suhayl Packery CA(SA), a registered IRBA auditor, University of Johannesburg alumnus and PwC-trained. Our consulting partner Beta Konsult works with us on risk and legal matters. Established in June 2013 in Nelspruit.",
+      text: "The firm is led by founder and managing director Suhayl Packery CA(SA), a registered IRBA auditor, University of Johannesburg alumnus and PwC-trained. Our consulting partner Beta Konsult (Pty) Ltd provides business consulting and advisory: strategic advisory, business valuations, financial advisory and risk management. Established in June 2013 in Nelspruit.",
       actions: [{ label: "Meet the team", href: "/about", kind: "primary" }],
     }),
   },

@@ -73,7 +73,9 @@ export const yearsInPractice = new Date().getFullYear() - site.establishedYear;
 
 export type Leader = {
   name: string; initials: string; role: string; subtitle: string;
-  qualifications: string[]; experience: { org: string; role: string; years: string }[];
+  /** Left column heading (default "Qualifications") and right column heading (default "Experience"). */
+  qualificationsLabel?: string; experienceLabel?: string;
+  qualifications: string[]; experience: { org: string; role: string; years?: string }[];
 };
 
 export const team: Leader[] = [
@@ -91,15 +93,28 @@ export const team: Leader[] = [
       { org: "PwC", role: "IFRS Manager · articles at PwC Sunninghill", years: "2003 – 2006" },
     ],
   },
+  {
+    name: "Beta Konsult (Pty) Ltd",
+    initials: "BK",
+    role: "Business Consulting & Advisory",
+    subtitle: "Strategic Advisory · Valuations · Financial Consulting",
+    qualificationsLabel: "Professional expertise",
+    experienceLabel: "Experience & specialisation",
+    qualifications: [
+      "Actuarial Science",
+      "Financial & Risk Management",
+      "Business Analysis & Valuations",
+      "Strategic Business Consulting",
+      "Financial Modelling & Feasibility Assessments",
+    ],
+    experience: [
+      { org: "Business Consulting", role: "Strategic planning, commercial assessments and business development." },
+      { org: "Business Valuations", role: "Business and financial valuations, investment assessments and commercial evaluations." },
+      { org: "Financial Advisory", role: "Financial modelling, feasibility studies and financial performance assessments." },
+      { org: "Risk Management", role: "Financial risk assessments, governance and operational risk consulting." },
+    ],
+  }
 ];
-
-/** Consulting partner. Referenced as a firm, not an individual (client request, 17 Nov 2026). */
-export const consultingPartner = {
-  name: "Beta Konsult",
-  initials: "BK",
-  role: "Consulting partner",
-  description: "S Packery Inc. works with Beta Konsult, its consulting partner, on risk and legal matters for clients.",
-};
 
 /** Suhayl's own words, from the Business Profile. */
 export const founderQuote =
