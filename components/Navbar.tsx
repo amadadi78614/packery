@@ -124,6 +124,9 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-4 xl:flex">
+          <a href={site.phoneHref} aria-label={`Call ${site.phoneDisplay}`} className={`grid h-10 w-10 place-items-center rounded-full 2xl:hidden ${solid ? "text-navy-900 hover:bg-slate-100" : "text-white hover:bg-white/10"}`}>
+            <Phone className="h-5 w-5 text-accent-500" aria-hidden />
+          </a>
           <a href={site.phoneHref} className={`hidden items-center gap-2 whitespace-nowrap text-sm font-medium 2xl:flex ${solid ? "text-navy-900" : "text-white"}`}>
             <Phone className="h-4 w-4 text-accent-500" aria-hidden />
             {site.phoneDisplay}
@@ -139,6 +142,14 @@ export default function Navbar() {
           )}
         </div>
 
+        <div className="flex items-center gap-1 xl:hidden">
+        <a
+          href={site.phoneHref}
+          aria-label={`Call ${site.phoneDisplay}`}
+          className={`grid h-10 w-10 place-items-center rounded-full transition ${solid ? "text-navy-900 hover:bg-slate-100" : "text-white hover:bg-white/10"}`}
+        >
+          <Phone className="h-5 w-5" aria-hidden />
+        </a>
         <button
           type="button"
           className={`grid h-10 w-10 place-items-center rounded-full xl:hidden ${solid ? "text-navy-900" : "text-white"}`}
@@ -149,6 +160,7 @@ export default function Navbar() {
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
+        </div>
       </div>
 
       <div className="absolute inset-x-0 bottom-0 h-0.5 overflow-hidden" aria-hidden><motion.div style={{ scaleX: progress }} className="h-full w-full origin-left bg-gradient-to-r from-accent-500 to-accent-300" /></div>
