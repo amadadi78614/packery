@@ -1,29 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, ChevronLeft, ChevronRight, Download, X, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { BookOpen, Download, CheckCircle2 } from "lucide-react";
 import type { MagazineIssue } from "@/lib/magazine";
 import { Reveal } from "./motion";
+import MagazineFlipbook from "./MagazineFlipbook";
 
 /** One magazine issue: cover, contents, page thumbnails and a full-screen page reader. */
 export default function MagazineViewer({ issue, featured = false }: { issue: MagazineIssue; featured?: boolean }) {
   const [open, setOpen] = useState<number | null>(null);
-  const total = issue.pages.length;
-  const [touchX, setTouchX] = useState<number | null>(null);
-  const go = useCallback((d: number) => setOpen((i) => (i === null ? i : (i + d + total) % total)), [total]);
-
-  useEffect(() => {
-    if (open === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(null);
-      if (e.key === "ArrowRight") go(1);
-      if (e.key === "ArrowLeft") go(-1);
-    };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
-  }, [open, go]);
 
   return (
     <article id={issue.slug} className="scroll-mt-28">
@@ -86,55 +71,7 @@ export default function MagazineViewer({ issue, featured = false }: { issue: Mag
         ))}
       </div>
 
-      <AnimatePresence>
-        {open !== null && (
-          <motion.div
-            role="dialog" aria-modal="true" aria-label={`Issue ${issue.number}, page ${open + 1} of ${total}`}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] flex flex-col bg-navy-950/95 backdrop-blur-sm"
-            onClick={() => setOpen(null)}
-            onTouchStart={(e) => setTouchX(e.touches[0].clientX)}
-            onTouchEnd={(e) => {
-              if (touchX === null) return;
-              const dx = e.changedTouches[0].clientX - touchX;
-              if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
-              setTouchX(null);
-            }}
-          >
-            <div className="flex items-center justify-between px-4 py-3 text-white sm:px-6" onClick={(e) => e.stopPropagation()}>
-              <p className="text-sm font-semibold">Issue {issue.number} · Page {open + 1} of {total}</p>
-              <div className="flex items-center gap-2">
-                <a href={issue.pdf} download className="hidden items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold hover:bg-white/10 sm:inline-flex">
-                  <Download className="h-4 w-4" /> PDF
-                </a>
-                <button type="button" onClick={() => setOpen(null)} aria-label="Close" className="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10">
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-            <div className="relative flex min-h-0 flex-1 items-center justify-center px-2 pb-4 sm:px-16">
-              <AnimatePresence mode="wait">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <motion.img
-                  key={open}
-                  src={issue.pages[open].src}
-                  alt={issue.pages[open].title}
-                  initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
-                  onClick={(e) => e.stopPropagation()}
-                />
-              </AnimatePresence>
-              <button type="button" onClick={(e) => { e.stopPropagation(); go(-1); }} aria-label="Previous page" className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-navy-900/80 text-white ring-1 ring-white/30 hover:bg-navy-800 sm:left-4">
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              <button type="button" onClick={(e) => { e.stopPropagation(); go(1); }} aria-label="Next page" className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-navy-900/80 text-white ring-1 ring-white/30 hover:bg-navy-800 sm:right-4">
-                <ChevronRight className="h-6 w-6" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open !== null && <MagazineFlipbook issue={issue} startPage={open} onClose={() => setOpen(null)} />}
     </article>
   );
 }

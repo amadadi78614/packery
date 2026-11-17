@@ -123,3 +123,7 @@
   body { background: #fff !important; }
   .legal a { color: #1F2340 !important; text-decoration: underline; }
 }
+
+/* ---------- Magazine flipbook ---------- */
+.mag-page { background: #fff; overflow: hidden; }
+.mag-page img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
